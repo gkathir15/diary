@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseConsts {
-  static GoogleSignIn googleSignIn = GoogleSignIn();
-  static FirebaseAuth auth = FirebaseAuth.instance;
-  static FirebaseUser fireBaseUser;
+  GoogleSignIn googleSignIn = GoogleSignIn();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseUser fireBaseUser;
 }

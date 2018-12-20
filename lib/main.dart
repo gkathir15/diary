@@ -7,6 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 void main() => runApp(MyApp());
 
+GoogleSignIn googleSignIn = GoogleSignIn();
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseUser fireBaseUser;
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -26,46 +30,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //FirebaseUser userData;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text("Diary"),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        centerTitle: true,
-      ),
-      body: Center(
-          child: new RaisedButton(
-        onPressed: () {
-          _handleSignIn()
-              .then((FirebaseUser user) => () {
-                    FirebaseConsts.fireBaseUser = user;
-                    print(user);
-                    print(FirebaseConsts.fireBaseUser);
-                  })
-              .catchError((e) => print(e));
-        },
-        color: Colors.white,
-        child: new Icon(
-          Icons.assignment_ind,
-          color: Colors.white,
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: Text("Diary"),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          centerTitle: true,
         ),
-      )),
+        body: fireBaseUser == null
+            ? Center(
+                child: new RaisedButton(
+                onPressed: () {
+                  _handleSignIn();
+                },
+                color: Colors.white,
+                child: new Icon(
+                  Icons.assignment_ind,
+                  color: Colors.white,
+                ),
+              ))
+            : new Center(
+                child: new Text(
+                  fireBaseUser != null ? fireBaseUser.email : "nulls",
+                  style: new TextStyle(color: Colors.white),
+                ),
+              )
 
-      // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        // This trailing comma makes auto-formatting nicer for build methods.
+        );
   }
 
-  Future<FirebaseUser> _handleSignIn() async {
-    GoogleSignInAccount googleUser = await FirebaseConsts.googleSignIn.signIn();
+  void _handleSignIn() async {
+    GoogleSignInAccount googleUser = await googleSignIn.signIn();
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    FirebaseUser user = await FirebaseConsts.auth.signInWithGoogle(
+    FirebaseUser user = await auth.signInWithGoogle(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
     print("signed in " + user.displayName);
-    return user;
+    fireBaseUser = user;
+    setState(() {});
   }
 }
