@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timeline/model/timeline_model.dart';
+import 'constants/Keys.dart';
+import 'package:timeline/timeline.dart';
+import 'package:timeline/timeline_element.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser fireBaseUser;
+  Firestore firestore;
+  List<TimelineModel> timeList;
 
 void main() => runApp(MyApp());
 
@@ -22,6 +29,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -66,6 +74,16 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.black,
       resizeToAvoidBottomPadding: false,
       bottomNavigationBar: BottomAppBar(notchMargin: 2.0,),
+      body: Container(
+        child: StreamBuilder(stream:Firestore.instance.collection('DIARY_DATA').snapshots(),
+            builder:(context,snapshot){
+            if(!snapshot.hasData) return Text("Loading",style: new TextStyle(color:Colors.white));
+            return Stack(
+              children: <Widget>[
+                new TimelineComponent(timelineList:getTimeLineSnapshot(snapshot),)
+              ], );
+            }),
+      ),
     );
   }
 
@@ -79,4 +97,35 @@ class _MyHomePageState extends State<MyHomePage> {
     print("signed in " + user.displayName);
     fireBaseUser = user;
   }
+  _handleSilentSignIn() async{
+    GoogleSignInAccount googleSignInAccount = await
+    googleSignIn.signInSilently(suppressErrors: true);
+    GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
+    fireBaseUser = await auth.signInWithGoogle(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    setState(() {
+
+    });
+  }
+
+  List<TimelineModel> getTimeLineSnapshot(AsyncSnapshot<QuerySnapshot> qSnapshot)
+  {
+    print(qSnapshot.data.documents.length);
+    List<TimelineModel> _list = new List();
+    for(int i=0;i<=qSnapshot.data.documents.length;i++)
+      {
+        _list.add(new TimelineModel(id: qSnapshot.data.documents[i]['DATE'],title:qSnapshot.data.documents[i]['DATE'] ));
+      }
+        print("list len"+_list.length.toString());
+      return _list;
+  }
+
+  @override
+  void initState() {
+    _handleSilentSignIn();
+    super.initState();
+  }
+
 }
