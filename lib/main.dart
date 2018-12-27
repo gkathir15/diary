@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Text("Loading",
                           style: new TextStyle(color: Colors.white));
                     return AnimCards(cards:demCards,animOnScroll: (double scrollPercent) {
-                  setState(() => this.scrollPercent = scrollPercent);});
+                  setState(() => this.scrollPercent = scrollPercent);},scrollPercent: scrollPercent,);
 
                   }),
             ),

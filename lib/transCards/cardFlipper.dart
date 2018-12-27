@@ -1,18 +1,20 @@
 import 'dart:math';
 import 'dart:ui' show lerpDouble;
-
 import 'card_data.dart';
 import 'package:flutter/material.dart';
+import 'AnimCardBottomBar.dart';
+import 'DateCard.dart';
 
 
 class AnimCards extends StatefulWidget {
 
-  final double scrollPercent = 0.0;
+
   final List<CardViewModel> cards;
   final Function animOnScroll;
+ final double scrollPercent ;
 
   AnimCards(
-      {Key key, @required this.cards,@required this.animOnScroll}) : super(key: key
+      {Key key, @required this.cards,@required this.animOnScroll,this.scrollPercent}) : super(key: key
   );
 
   @override
@@ -20,6 +22,8 @@ class AnimCards extends StatefulWidget {
 }
 
 class _AnimCardsState extends State<AnimCards> {
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +83,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     super.initState();
 
     finishScrollController = new AnimationController(
-      duration: const Duration(milliseconds:50),
+      duration: const Duration(milliseconds:200),
       vsync: this,
     )
       ..addListener(() {
@@ -192,7 +196,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
         padding: const EdgeInsets.all(16.0),
         child: new Transform(
           transform: _buildCardProjection(cardScrollPercent - cardIndex),
-          child: new Card(
+          child: new DateCard(
             viewModel: viewModel,
             parallaxPercent: parallax,
           ),
@@ -215,301 +219,3 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   }
 }
 
-class Card extends StatelessWidget {
-  final CardViewModel viewModel;
-  final double parallaxPercent; // [0.0, 1.0] (0.0 for all the way right, 1.0 for all the way left)
-
-  Card({
-    this.viewModel,
-    this.parallaxPercent = 0.0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return new Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        // Background
-        new ClipRRect(
-          borderRadius: new BorderRadius.circular(10.0),
-          child: new Container(
-            child: new FractionalTranslation(
-              translation: new Offset(parallaxPercent * 2.0, 0.0),
-              child: new OverflowBox(
-                maxWidth: double.infinity,
-                child: new Image.asset(
-                  viewModel.backdropAssetPath,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        // Content
-        new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            new Padding(
-              padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
-              child: new Text(
-                '${viewModel.address}'.toUpperCase(),
-                style: new TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontFamily: 'petita',
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2.0,
-                ),
-              ),
-            ),
-            new Expanded(child: new Container()),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                new Text(
-                  '${viewModel.minHeightInFeet} - ${viewModel.maxHeightInFeet}',
-                  style: new TextStyle(
-                    color: Colors.white,
-                    fontSize: 140.0,
-                    fontFamily: 'petita',
-                    letterSpacing: -5.0,
-                  ),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 30.0),
-                  child: new Text(
-                    'FT',
-                    style: new TextStyle(
-                      color: Colors.white,
-                      fontSize: 22.0,
-                      fontFamily: 'petita',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                new Icon(
-                  Icons.wb_sunny,
-                  color: Colors.white,
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: new Text(
-                    '${viewModel.tempInDegrees.toStringAsFixed(1)}º',
-                    style: new TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'petita',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            new Expanded(child: new Container()),
-            new Padding(
-              padding: const EdgeInsets.only(top: 50.0, bottom: 50.0),
-              child: new Container(
-                decoration: new BoxDecoration(
-                  borderRadius: new BorderRadius.circular(30.0),
-                  border: new Border.all(
-                    color: Colors.white,
-                    width: 1.5,
-                  ),
-                  color: Colors.black.withOpacity(0.3),
-                ),
-                child: new Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                    top: 10.0,
-                    bottom: 10.0,
-                  ),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      new Text(
-                        '${viewModel.weatherType}',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'petita',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      new Padding(
-                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                        child: new Icon(
-                          Icons.wb_cloudy,
-                          color: Colors.white,
-                        ),
-                      ),
-                      new Text(
-                        '${viewModel.windSpeedInMph}mph ${viewModel.cardinalDirection}',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'petita',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class BottomBar extends StatelessWidget {
-  final int cardCount;
-  final double scrollPercent;
-
-  BottomBar({
-    this.cardCount,
-    this.scrollPercent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      width: double.infinity,
-      child: new Padding(
-        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-        child: new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Center(
-                child: new Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Container(
-                  width: double.infinity,
-                  height: 5.0,
-                  child: new ScrollIndicator(
-                    cardCount: cardCount,
-                    scrollPercent: scrollPercent,
-                  ),
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ScrollIndicator extends StatelessWidget {
-  final int cardCount;
-  final double scrollPercent;
-
-  ScrollIndicator({
-    this.cardCount,
-    this.scrollPercent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return new CustomPaint(
-      painter: new ScrollIndicatorPainter(
-        cardCount: cardCount,
-        scrollPercent: scrollPercent,
-      ),
-      child: new Container(),
-    );
-  }
-}
-
-class ScrollIndicatorPainter extends CustomPainter {
-  final int cardCount;
-  final double scrollPercent;
-  final Paint trackPaint;
-  final Paint thumbPaint;
-
-  ScrollIndicatorPainter({
-    this.cardCount,
-    this.scrollPercent,
-  })  : trackPaint = new Paint()
-          ..color = const Color(0xFF444444)
-          ..style = PaintingStyle.fill,
-        thumbPaint = new Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.fill;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double rad = 5.0;
-    // Draw track
-    canvas.drawRRect(
-      new RRect.fromRectAndCorners(
-        new Rect.fromLTWH(
-          0.0,
-          0.0,
-          size.width,
-          size.height,
-        ),
-        topLeft: new Radius.circular(rad),
-        topRight: new Radius.circular(rad),
-        bottomLeft: new Radius.circular(rad),
-        bottomRight: new Radius.circular(rad),
-      ),
-      trackPaint,
-    );
-
-    // Draw thumb
-    final thumbWidth = size.width / cardCount;
-    final thumbLeft = scrollPercent * size.width;
-
-    Path thumbPath = new Path();
-    thumbPath.addRRect(
-      new RRect.fromRectAndCorners(
-        new Rect.fromLTWH(
-          thumbLeft,
-          0.0,
-          thumbWidth,
-          size.height,
-        ),
-        topLeft: new Radius.circular(rad),
-        topRight: new Radius.circular(rad),
-        bottomLeft: new Radius.circular(rad),
-        bottomRight: new Radius.circular(rad),
-      ),
-    );
-
-    // Thumb shape
-    canvas.drawPath(
-      thumbPath,
-      thumbPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-}
