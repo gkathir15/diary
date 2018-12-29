@@ -27,34 +27,43 @@ class _AnimCardsState extends State<AnimCards> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.black,
-      body: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Spacer for status bar
+    return Container(
+        decoration: new BoxDecoration(
+            image: new DecorationImage(
+              image: new AssetImage("assets/jpgs/mainBg.jpg"),
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            )),
+      child:
+        new Scaffold(
+          backgroundColor: Colors.transparent,
+          body: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Spacer for status bar
 
 
-          // Cards
-          new Expanded(
-            child: new CardFlipper(
-                cards: widget.cards,
-                onScroll: widget.animOnScroll,
-          ),
-          ),
+              // Cards
+              new Expanded(
+                child: new CardFlipper(
+                  cards: widget.cards,
+                  onScroll: widget.animOnScroll,
+                ),
+              ),
 
-          // Scroll Indicator
-          new BottomBar(
-            cardCount: widget.cards.length,
-            scrollPercent: widget.scrollPercent,
-          ),
+              // Scroll Indicator
+              new BottomBar(
+                cardCount: widget.cards.length,
+                scrollPercent: widget.scrollPercent,
+              ),
 
-          new Container(
-            width: double.infinity,
-            height: 15.0,
+              new Container(
+                width: double.infinity,
+                height: 15.0,
+              ),
+            ],
           ),
-        ],
-      ),
+        )
     );
   }
 }

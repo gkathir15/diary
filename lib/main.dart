@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // This trailing comma makes auto-formatting nicer for build methods.
             )
         : Scaffold(
-          //backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
             bottomNavigationBar: FABBottomAppBar(
               backgroundColor: Colors.amber,
               centerItemText: 'New',
