@@ -15,41 +15,24 @@ class BottomBar extends StatelessWidget {
     return new Container(
       width: double.infinity,
       child: new Padding(
-        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-        child: new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Center(
-                child: new Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Container(
-                  width: double.infinity,
-                  height: 5.0,
-                  child: new ScrollIndicator(
-                    cardCount: cardCount,
-                    scrollPercent: scrollPercent,
-                  ),
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+        child:  new Row(
+    children: <Widget>[
+        new Expanded(
+        child: new Center(
+        child: new Container(
+        width: double.infinity,
+          height: 5.0,
+          child: new ScrollIndicator(
+            cardCount: cardCount,
+            scrollPercent: scrollPercent,
+          ),
         ),
       ),
-    );
+    ),
+    ],
+    ))
+         );
   }
 }
 

@@ -1,6 +1,6 @@
 final List<CardViewModel> demoCards = [
   new CardViewModel(
-    backdropAssetPath: 'https://images.unsplash.com/photo-1545647274-96644da34363?ixlib=rb-1.2.1&auto=format&fit=crop&w=1406&q=80',
+    backdropAssetPath:  'assets/jpgs/1.jpg',
     address: '10TH STREET',
     minHeightInFeet: 2,
     maxHeightInFeet: 3,
@@ -10,7 +10,7 @@ final List<CardViewModel> demoCards = [
     cardinalDirection: "ENE",
   ),
   new CardViewModel(
-    backdropAssetPath: 'assets/dusk_waves.jpg',
+    backdropAssetPath:  'assets/jpgs/2.jpg',
     address: '10TH STREET NORTH\nTO 14TH STREET NO...',
     minHeightInFeet: 6,
     maxHeightInFeet: 7,
@@ -20,7 +20,7 @@ final List<CardViewModel> demoCards = [
     cardinalDirection: "E",
   ),
   new CardViewModel(
-    backdropAssetPath: 'assets/board_walk.jpg',
+    backdropAssetPath:  'assets/jpgs/3.jpg',
     address: 'BELLS BEACH',
     minHeightInFeet: 3,
     maxHeightInFeet: 4,
@@ -31,7 +31,7 @@ final List<CardViewModel> demoCards = [
   ),
 
   new CardViewModel(
-    backdropAssetPath: 'assets/van_on_beach.jpg',
+    backdropAssetPath: 'assets/jpgs/4.jpg',
     address: '20TH STREET',
     minHeightInFeet: 2,
     maxHeightInFeet: 3,

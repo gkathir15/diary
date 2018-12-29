@@ -3,20 +3,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:timeline/model/timeline_model.dart';
-import 'constants/Keys.dart';
-import 'package:timeline/timeline.dart';
-import 'package:timeline/timeline_element.dart';
-import 'transCards/cardFlipper.dart';
-import 'transCards/card_data.dart';
-
+import 'UI/transCards/cardFlipper.dart';
+import 'UI/transCards/card_data.dart';
+import 'UI/CustomBottomBar/fab_bottom_app_bar.dart';
+import 'UI/CustomBottomBar/fab_with_icons.dart';
+import 'UI/CustomBottomBar/layout.dart';
+import 'constants/AppConstants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'model/SplashData.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser fireBaseUser;
-Firestore firestore;
-List<TimelineModel> timeList;
+Firestore fireStore;
+SharedPreferences sharedPreferences;
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,7 +31,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       checkerboardOffscreenLayers: true,
       title: 'Diary',
-      theme: ThemeData(primarySwatch: Colors.blue, splashColor: Colors.amber),
+      theme: ThemeData(primarySwatch: Colors.blue, splashColor: Colors.white,
+      bottomAppBarColor: Colors.black,
+      backgroundColor: Colors.black,
+      accentColor: Colors.transparent),
       home: MyHomePage(),
     );
   }
@@ -48,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
             body: Container(
               decoration: new BoxDecoration(
                   image: new DecorationImage(
-                image: new AssetImage("assets/jpgs/drew.jpg"),
+                image: new AssetImage("assets/jpgs/signIn.jpg"),
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               )),
@@ -94,21 +103,50 @@ class _MyHomePageState extends State<MyHomePage> {
             // This trailing comma makes auto-formatting nicer for build methods.
             )
         : Scaffold(
-            floatingActionButton: new FloatingActionButton(
-              backgroundColor: Colors.indigoAccent,
-              onPressed: null,
-              child: new Icon(
-                Icons.add,
-              ),
+          //backgroundColor: Colors.black,
+            bottomNavigationBar: FABBottomAppBar(
+              backgroundColor: Colors.amber,
+              centerItemText: 'New',
+              color: Colors.white,
+              selectedColor: Colors.blueAccent,
+              notchedShape: CircularNotchedRectangle(),
+              onTabSelected: _selectedTab,
+              items: [
+                FABBottomAppBarItem(iconData: Icons.date_range, text: 'Calendar'),
+                FABBottomAppBarItem(iconData: Icons.notifications, text: 'Notifications'),
+                FABBottomAppBarItem(iconData: Icons.settings, text: 'Settings'),
+                FABBottomAppBarItem(iconData: Icons.info, text: 'Profile'),
+              ],
             ),
+//    bottomNavigationBar: BottomNavigationBar(
+//      items: [
+//        BottomNavigationBarItem(icon: Icon(Icons.date_range),title:Text("Calendar")),
+//        BottomNavigationBarItem(icon: Icon(Icons.settings),title:Text("Settings")),
+//        BottomNavigationBarItem(icon: Icon(Icons.info),title:Text("Profile"))
+//     ],
+//      fixedColor: Colors.black,
+//      type: BottomNavigationBarType.fixed,
+//
+//    ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            backgroundColor: Colors.black,
-            resizeToAvoidBottomPadding: false,
-            bottomNavigationBar: BottomAppBar(
-              notchMargin: 2.0,
-            ),
+            floatingActionButton: new FloatingActionButton(
+              shape:  CircleBorder(side: BorderSide.lerp(BorderSide(color: Colors.black), BorderSide(color: Colors.black), 2.0)),
+              foregroundColor: Colors.white,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+                elevation: 2.0,
+                onPressed: () {}),
             body: Container(
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/jpgs/mainBg.jpg"),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  )),
               child: StreamBuilder(
                   stream:
                       Firestore.instance.collection('DIARY_DATA').snapshots(),
@@ -116,15 +154,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (!snapshot.hasData)
                       return Text("Loading",
                           style: new TextStyle(color: Colors.white));
-                    return AnimCards(cards:demCards,animOnScroll: (double scrollPercent) {
-                  setState(() => this.scrollPercent = scrollPercent);},scrollPercent: scrollPercent,);
-
+                    return AnimCards(
+                      cards: demCards,
+                      animOnScroll: (double scrollPercent) {
+                        setState(() => this.scrollPercent = scrollPercent);
+                      },
+                      scrollPercent: scrollPercent,
+                    );
                   }),
             ),
           );
   }
 
-  
+  String _lastSelected = 'TAB: 0';
+
+  void _selectedTab(int index) {
+    setState(() {
+      _lastSelected = 'TAB: $index';
+    });
+  }
+
+  void _selectedFab(int index) {
+    setState(() {
+      _lastSelected = 'FAB: $index';
+    });
+  }
 
   _handleSignIn() async {
     GoogleSignInAccount googleUser = await googleSignIn.signIn();
@@ -149,6 +203,24 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
+  getSplashBgDate() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    List<String> data;
+    if (!sharedPreferences.getBool(IS_SPLASH_DATA_STORED)) {
+      var response = await http.get(thumbsJsonUrl).catchError(() {
+        sharedPreferences.setBool(IS_SPLASH_DATA_STORED, false);
+        return;
+      });
+      Map responseMap = json.decode(response.body);
+      data = SplashData.fromJson(responseMap).data;
+      for (int i = 0; i <= data.length; i++) {
+        sharedPreferences.setString(SPLASH_Pic + i.toString(), data[i]);
+      }
+      sharedPreferences.setString(SPLASH_DATA_SIZE, data.length.toString());
+      sharedPreferences.setBool(IS_SPLASH_DATA_STORED, true);
+    }
+  }
+
   List<TimelineModel> getTimeLineSnapshot(
       AsyncSnapshot<QuerySnapshot> qSnapshot) {
     print(qSnapshot.data.documents.length);
@@ -162,6 +234,30 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     print("list len" + _list.length.toString());
     return _list;
+  }
+
+  Widget _buildFab() {
+    final icons = [Icons.sms, Icons.mail, Icons.phone];
+    return AnchoredOverlay(
+      showOverlay: true,
+      overlayBuilder: (context, offset) {
+        return CenterAbout(
+          position: Offset(offset.dx, offset.dy - icons.length * 35.0),
+          child: FabWithIcons(
+            icons: icons,
+            onIconTapped: _selectedFab,
+          ),
+        );
+      },
+      child: FloatingActionButton(
+        onPressed: () {
+          print("Fab");
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+        elevation: 2.0,
+      ),
+    );
   }
 
   @override

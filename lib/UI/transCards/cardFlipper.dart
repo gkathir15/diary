@@ -33,10 +33,7 @@ class _AnimCardsState extends State<AnimCards> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Spacer for status bar
-          new Container(
-            width: double.infinity,
-            height: 20.0,
-          ),
+
 
           // Cards
           new Expanded(
@@ -50,6 +47,11 @@ class _AnimCardsState extends State<AnimCards> {
           new BottomBar(
             cardCount: widget.cards.length,
             scrollPercent: widget.scrollPercent,
+          ),
+
+          new Container(
+            width: double.infinity,
+            height: 15.0,
           ),
         ],
       ),
