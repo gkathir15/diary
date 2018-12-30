@@ -1,7 +1,10 @@
+import 'package:date_format/date_format.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart';
 import 'package:timeline/model/timeline_model.dart';
 import 'UI/transCards/cardFlipper.dart';
 import 'UI/transCards/card_data.dart';
@@ -13,6 +16,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'model/SplashData.dart';
+import 'package:date_format/date_format.dart';
+import 'dart:core';
+import 'package:connectivity/connectivity.dart';
+import 'UI/dialogs/NewPageDialog.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -34,7 +41,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue, splashColor: Colors.white,
       bottomAppBarColor: Colors.black,
       backgroundColor: Colors.black,
-      accentColor: Colors.transparent),
+      accentColor: Colors.transparent,
+      primaryColorDark: Colors.transparent,),
       home: MyHomePage(),
     );
   }
@@ -139,7 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.black,
                 ),
                 elevation: 2.0,
-                onPressed: () {}),
+                onPressed: () {
+                  ShowDialogIFCardNotPresent(context);
+                }),
             body: Container(
               decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -216,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
       for (int i = 0; i <= data.length; i++) {
         sharedPreferences.setString(SPLASH_Pic + i.toString(), data[i]);
       }
-      sharedPreferences.setString(SPLASH_DATA_SIZE, data.length.toString());
+      sharedPreferences.setInt(SPLASH_DATA_SIZE, data.length);
       sharedPreferences.setBool(IS_SPLASH_DATA_STORED, true);
     }
   }
@@ -234,6 +244,37 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     print("list len" + _list.length.toString());
     return _list;
+  }
+  
+  String todayDateAsDDMMYY()
+  {String formattedDate;
+  DateTime dateTime = DateTime.now();
+  formattedDate = formatDate(dateTime, [dd,'.',mm,'.',yyyy]);
+  return formattedDate;    
+  }
+  
+
+
+  
+  bool getNetWorkStatus()
+  {
+    var connectivityResult = (new Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      // I am connected to a mobile network.
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      // I am connected to a wifi network.
+      return true;
+    }
+  }
+  
+  ShowDialogIFCardNotPresent(BuildContext context)
+  {
+//   if(getNetWorkStatus())
+//     {
+       showDialog(context: context,child: NewPagDialog(title: todayDateAsDDMMYY()));
+//     }
+
   }
 
   Widget _buildFab() {
