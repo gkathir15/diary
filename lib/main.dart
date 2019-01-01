@@ -29,6 +29,8 @@ SharedPreferences sharedPreferences;
 
 void main() {
   runApp(MyApp());
+  fireStore = Firestore.instance;
+  fireStore.settings(persistenceEnabled: true,timestampsInSnapshotsEnabled: true);
 }
 
 class MyApp extends StatelessWidget {
@@ -97,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: MediaQuery.of(context).size.width / 5,
                         ),
                         onTap: () {
-                          setState(() {
                             _handleSignIn();
-                          });
                         },
                       )
                     ],
@@ -148,7 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 elevation: 2.0,
                 onPressed: () {
-                  ShowDialogIFCardNotPresent(context);
+                 // ShowDialogIFCardNotPresent(context);
+                  create_or_naviagateToPage();
                 }),
             body: Container(
               decoration: new BoxDecoration(
@@ -199,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     print("signed in " + user.displayName);
     fireBaseUser = user;
+    setState(() {});
   }
 
   _handleSilentSignIn() async {
@@ -216,7 +218,8 @@ class _MyHomePageState extends State<MyHomePage> {
   getSplashBgDate() async {
     sharedPreferences = await SharedPreferences.getInstance();
     List<String> data;
-    if (!sharedPreferences.getBool(IS_SPLASH_DATA_STORED)) {
+    //print(sharedPreferences.getBool(IS_SPLASH_DATA_STORED));
+    if (sharedPreferences.getBool(IS_SPLASH_DATA_STORED)==null||!sharedPreferences.getBool(IS_SPLASH_DATA_STORED)) {
       var response = await http.get(thumbsJsonUrl).catchError(() {
         sharedPreferences.setBool(IS_SPLASH_DATA_STORED, false);
         return;
@@ -252,10 +255,34 @@ class _MyHomePageState extends State<MyHomePage> {
   formattedDate = formatDate(dateTime, [dd,'.',mm,'.',yyyy]);
   return formattedDate;    
   }
+
+
+  create_or_naviagateToPage(String dateString)
+  async {
+    QuerySnapshot querySnapshot = await fireStore.collection(Collection_DIARY_DATA).getDocuments();
+    List <DocumentSnapshot> docs = querySnapshot.documents;
+
+    for(DocumentSnapshot d in docs)
+      {
+        if(d.documentID==dateString)
+          return;
+      }
+     // querySnapshot.documents.add();
+
+//    if(docs.contains("22.12.2018"))
+//      {
+//        print("today date is present");
+//      }
+//      else
+//        {
+//         // fireStore.collection(Collection_DIARY_DATA).document(todayDateAsDDMMYY()).
+//          print("today date is not present");
+//        }
+  }
   
 
 
-  
+
   bool getNetWorkStatus()
   {
     var connectivityResult = (new Connectivity().checkConnectivity());
@@ -272,7 +299,11 @@ class _MyHomePageState extends State<MyHomePage> {
   {
 //   if(getNetWorkStatus())
 //     {
-       showDialog(context: context,child: NewPagDialog(title: todayDateAsDDMMYY()));
+      // showDialog(context: context,child: NewPagDialog(title: todayDateAsDDMMYY()));
+    Navigator.push(context, new MaterialPageRoute(
+        builder: (BuildContext context) {
+    return new NewPagDialog(title:todayDateAsDDMMYY());
+    },fullscreenDialog: true,));
 //     }
 
   }
@@ -304,6 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _handleSilentSignIn();
+    getSplashBgDate();
     super.initState();
   }
 }
