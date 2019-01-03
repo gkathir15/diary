@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:diary/main.dart';
 import 'package:diary/constants/AppConstants.dart';
+import 'package:diary/UI/transCards/cardFlipper.dart';
+import 'package:diary/UI/transCards/DateCard.dart';
+import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 
 class LeafPage extends StatefulWidget {
   @override
@@ -9,10 +12,14 @@ class LeafPage extends StatefulWidget {
   }
 }
 
-class LeafState extends State<LeafPage> {
+class LeafState extends State<LeafPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold();
+    return Scaffold(
+      endDrawer: Icon(Icons.arrow_back_ios),
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }
