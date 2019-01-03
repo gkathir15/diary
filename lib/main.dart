@@ -30,7 +30,8 @@ SharedPreferences sharedPreferences;
 void main() {
   runApp(MyApp());
   fireStore = Firestore.instance;
-  fireStore.settings(persistenceEnabled: true,timestampsInSnapshotsEnabled: true);
+  fireStore.settings(
+      persistenceEnabled: true, timestampsInSnapshotsEnabled: true);
 }
 
 class MyApp extends StatelessWidget {
@@ -40,11 +41,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       checkerboardOffscreenLayers: true,
       title: 'Diary',
-      theme: ThemeData(primarySwatch: Colors.blue, splashColor: Colors.white,
-      bottomAppBarColor: Colors.black,
-      backgroundColor: Colors.black,
-      accentColor: Colors.transparent,
-      primaryColorDark: Colors.transparent,),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        splashColor: Colors.white,
+        bottomAppBarColor: Colors.black,
+        backgroundColor: Colors.black,
+        accentColor: Colors.transparent,
+        primaryColorDark: Colors.transparent,
+      ),
       home: MyHomePage(),
     );
   }
@@ -99,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: MediaQuery.of(context).size.width / 5,
                         ),
                         onTap: () {
-                            _handleSignIn();
+                          _handleSignIn();
                         },
                       )
                     ],
@@ -111,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // This trailing comma makes auto-formatting nicer for build methods.
             )
         : Scaffold(
-          backgroundColor: Colors.black,
+            backgroundColor: Colors.black,
             bottomNavigationBar: FABBottomAppBar(
               backgroundColor: Colors.amber,
               centerItemText: 'New',
@@ -120,8 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
               notchedShape: CircularNotchedRectangle(),
               onTabSelected: _selectedTab,
               items: [
-                FABBottomAppBarItem(iconData: Icons.date_range, text: 'Calendar'),
-                FABBottomAppBarItem(iconData: Icons.notifications, text: 'Notifications'),
+                FABBottomAppBarItem(
+                    iconData: Icons.date_range, text: 'Calendar'),
+                FABBottomAppBarItem(
+                    iconData: Icons.notifications, text: 'Notifications'),
                 FABBottomAppBarItem(iconData: Icons.settings, text: 'Settings'),
                 FABBottomAppBarItem(iconData: Icons.info, text: 'Profile'),
               ],
@@ -139,8 +145,10 @@ class _MyHomePageState extends State<MyHomePage> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: new FloatingActionButton(
-              shape:  CircleBorder(side: BorderSide.lerp(BorderSide(color: Colors.black), BorderSide(color: Colors.black), 2.0)),
-              foregroundColor: Colors.white,
+                shape: CircleBorder(
+                    side: BorderSide.lerp(BorderSide(color: Colors.black),
+                        BorderSide(color: Colors.black), 2.0)),
+                foregroundColor: Colors.white,
                 backgroundColor: Colors.white,
                 child: Icon(
                   Icons.add,
@@ -148,16 +156,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 elevation: 2.0,
                 onPressed: () {
-                 // ShowDialogIFCardNotPresent(context);
-                  create_or_naviagateToPage();
+                  // ShowDialogIFCardNotPresent(context);
+                  create_or_naviagateToPage(todayDateAsDDMMYY());
                 }),
             body: Container(
               decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage("assets/jpgs/mainBg.jpg"),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  )),
+                image: new AssetImage("assets/jpgs/mainBg.jpg"),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              )),
               child: StreamBuilder(
                   stream:
                       Firestore.instance.collection('DIARY_DATA').snapshots(),
@@ -219,7 +227,8 @@ class _MyHomePageState extends State<MyHomePage> {
     sharedPreferences = await SharedPreferences.getInstance();
     List<String> data;
     //print(sharedPreferences.getBool(IS_SPLASH_DATA_STORED));
-    if (sharedPreferences.getBool(IS_SPLASH_DATA_STORED)==null||!sharedPreferences.getBool(IS_SPLASH_DATA_STORED)) {
+    if (sharedPreferences.getBool(IS_SPLASH_DATA_STORED) == null ||
+        !sharedPreferences.getBool(IS_SPLASH_DATA_STORED)) {
       var response = await http.get(thumbsJsonUrl).catchError(() {
         sharedPreferences.setBool(IS_SPLASH_DATA_STORED, false);
         return;
@@ -248,43 +257,37 @@ class _MyHomePageState extends State<MyHomePage> {
     print("list len" + _list.length.toString());
     return _list;
   }
-  
-  String todayDateAsDDMMYY()
-  {String formattedDate;
-  DateTime dateTime = DateTime.now();
-  formattedDate = formatDate(dateTime, [dd,'.',mm,'.',yyyy]);
-  return formattedDate;    
+
+  String todayDateAsDDMMYY() {
+    String formattedDate;
+    DateTime dateTime = DateTime.now();
+    formattedDate = formatDate(dateTime, [dd, '.', mm, '.', yyyy]);
+    return formattedDate;
   }
 
+  create_or_naviagateToPage(String dateString) async {
+    QuerySnapshot querySnapshot =
+        await fireStore.collection(Collection_DIARY_DATA).getDocuments();
+    List<DocumentSnapshot> docs = querySnapshot.documents;
 
-  create_or_naviagateToPage(String dateString)
-  async {
-    QuerySnapshot querySnapshot = await fireStore.collection(Collection_DIARY_DATA).getDocuments();
-    List <DocumentSnapshot> docs = querySnapshot.documents;
-
-    for(DocumentSnapshot d in docs)
-      {
-        if(d.documentID==dateString)
-          return;
-      }
-     // querySnapshot.documents.add();
-
-//    if(docs.contains("22.12.2018"))
-//      {
-//        print("today date is present");
-//      }
-//      else
-//        {
-//         // fireStore.collection(Collection_DIARY_DATA).document(todayDateAsDDMMYY()).
-//          print("today date is not present");
-//        }
+    for (DocumentSnapshot d in docs) {
+      if (d.documentID == dateString) return;
+    }
+    fireStore
+        .collection(Collection_DIARY_DATA)
+        .document(todayDateAsDDMMYY())
+        .setData({
+      FIELD_ID: todayDateAsDDMMYY(),
+      CARD_CREATED_AT: Timestamp.now(),
+      CARD_CREATED_BY: fireBaseUser.email,
+      CREATED_DAY: Helpers.getDay(DateTime.now().weekday),
+      IS_READ_BY_CREATOR: true,
+      IS_READ_BY_RECIEVER: false,
+      BG_URL: sharedPreferences.get(SPLASH_Pic + DateTime.now().day.toString()),
+    });
   }
-  
 
-
-
-  bool getNetWorkStatus()
-  {
+  bool getNetWorkStatus() {
     var connectivityResult = (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
       // I am connected to a mobile network.
@@ -294,18 +297,20 @@ class _MyHomePageState extends State<MyHomePage> {
       return true;
     }
   }
-  
-  ShowDialogIFCardNotPresent(BuildContext context)
-  {
+
+  ShowDialogIFCardNotPresent(BuildContext context) {
 //   if(getNetWorkStatus())
 //     {
-      // showDialog(context: context,child: NewPagDialog(title: todayDateAsDDMMYY()));
-    Navigator.push(context, new MaterialPageRoute(
-        builder: (BuildContext context) {
-    return new NewPagDialog(title:todayDateAsDDMMYY());
-    },fullscreenDialog: true,));
+    // showDialog(context: context,child: NewPagDialog(title: todayDateAsDDMMYY()));
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (BuildContext context) {
+            return new NewPagDialog(title: todayDateAsDDMMYY());
+          },
+          fullscreenDialog: true,
+        ));
 //     }
-
   }
 
   Widget _buildFab() {
