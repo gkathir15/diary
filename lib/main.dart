@@ -1,7 +1,10 @@
 import 'package:date_format/date_format.dart';
 import 'package:date_format/date_format.dart';
+import 'package:diary/UI/LeafPage.dart';
+import 'package:diary/UI/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
@@ -20,6 +23,7 @@ import 'package:date_format/date_format.dart';
 import 'dart:core';
 import 'package:connectivity/connectivity.dart';
 import 'UI/dialogs/NewPageDialog.dart';
+import 'dart:ui';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -28,6 +32,8 @@ Firestore fireStore;
 SharedPreferences sharedPreferences;
 
 void main() {
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
   fireStore = Firestore.instance;
   fireStore.settings(
@@ -59,11 +65,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double scrollPercent = 0.0;
   List<CardViewModel> demCards = demoCards;
+  BuildContext fContext;
   @override
   Widget build(BuildContext context) {
+    fContext = context;
     return fireBaseUser == null
         ? Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -157,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 2.0,
                 onPressed: () {
                   // ShowDialogIFCardNotPresent(context);
-                  create_or_naviagateToPage(todayDateAsDDMMYY());
+                  createOrNaviagateToPage(todayDateAsDDMMYY(),fContext);
                 }),
             body: Container(
               decoration: new BoxDecoration(
@@ -188,9 +196,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String _lastSelected = 'TAB: 0';
 
   void _selectedTab(int index) {
-    setState(() {
-      _lastSelected = 'TAB: $index';
-    });
+    switch(index)
+    {
+      case 2:
+        Navigator.of(fContext).push(MaterialPageRoute(builder: (BuildContext context) =>LeafPage(pageDate: todayDateAsDDMMYY())));
+        break;
+      case 3:
+        Navigator.of(fContext).push(MaterialPageRoute(builder: (BuildContext context) =>ProfilePage()));
+
+    }
   }
 
   void _selectedFab(int index) {
@@ -265,13 +279,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return formattedDate;
   }
 
-  create_or_naviagateToPage(String dateString) async {
+  createOrNaviagateToPage(String dateString,BuildContext context) async {
     QuerySnapshot querySnapshot =
         await fireStore.collection(Collection_DIARY_DATA).getDocuments();
     List<DocumentSnapshot> docs = querySnapshot.documents;
 
     for (DocumentSnapshot d in docs) {
-      if (d.documentID == dateString) return;
+      if (d.documentID == dateString)
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext context) =>
+            LeafPage(pageDate: dateString)));          print("fab on exixting page");
+        return;
     }
     fireStore
         .collection(Collection_DIARY_DATA)
@@ -280,10 +298,15 @@ class _MyHomePageState extends State<MyHomePage> {
       FIELD_ID: todayDateAsDDMMYY(),
       CARD_CREATED_AT: Timestamp.now(),
       CARD_CREATED_BY: fireBaseUser.email,
-      CREATED_DAY: Helpers.getDay(DateTime.now().weekday),
+      CREATED_DAY: AppConstants.getDay(DateTime.now().weekday),
       IS_READ_BY_CREATOR: true,
       IS_READ_BY_RECIEVER: false,
       BG_URL: sharedPreferences.get(SPLASH_Pic + DateTime.now().day.toString()),
+    }).whenComplete((){
+      print("fab on created page");
+      Navigator.of(context).push(new MaterialPageRoute(
+          builder: (BuildContext context) =>
+           LeafPage(pageDate: dateString)));
     });
   }
 

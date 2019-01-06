@@ -22,12 +22,13 @@ final String IS_READ_BY_RECIEVER = "IS_READ_BY_RECIEVER";
 final String BG_URL = "BG_URL";
 
 //LeafPage Constants
-
+final String PARA_DATA ="PARA_DATA";
 final String PARA_TYPE = "PARA_TYPE";
-final String TYPE_IMAGE = "TYPE_IMAGE";
-final String TYPE_TEXT = "TYPE_TEXT";
-final String TYPE_LINK = "TYPE_LINK";
-final String TYPE_AUDIO = "TYPE_AUDIO";
+const String TYPE_IMAGE = "TYPE_IMAGE";
+const String TYPE_VIDEO = "TYPE_VIDEO";
+const String TYPE_TEXT = "TYPE_TEXT";
+const String TYPE_LINK = "TYPE_LINK";
+const String TYPE_AUDIO = "TYPE_AUDIO";
 final String PARA_WRITER = "PARA_WRITER";
 final String PARA_TIMESTAMP = "PARA_TIMESTAMP";
 final String PARA_ID = 'PARA_ID';
@@ -35,7 +36,7 @@ final String PARA_FONT = 'PARA_FONT';
 
 // Date Constants
 
-class Helpers {
+class AppConstants {
   static String getDay(int day) {
     switch (day) {
       case 1:
@@ -57,4 +58,13 @@ class Helpers {
         return "sunday";
     }
   }
+
+  static String defaultIfNull(String value,String defaultValue)
+  {
+    return value.isNotEmpty && value!=null?value:defaultValue;
+  }
+
+  //Colors
+
+
 }

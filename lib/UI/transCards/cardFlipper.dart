@@ -42,6 +42,10 @@ class _AnimCardsState extends State<AnimCards> {
             children: [
               // Spacer for status bar
 
+              new Container(
+                width: double.infinity,
+                height: 30.0,
+              ),
 
               // Cards
               new Expanded(
@@ -59,7 +63,7 @@ class _AnimCardsState extends State<AnimCards> {
 
               new Container(
                 width: double.infinity,
-                height: 15.0,
+                height: 20.0,
               ),
             ],
           ),
