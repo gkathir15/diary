@@ -1,11 +1,6 @@
 import 'package:diary/UI/CustomBottomBar/fab_with_icons.dart';
-import 'package:diary/UI/CustomBottomBar/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:diary/main.dart';
-import 'package:diary/constants/AppConstants.dart';
-import 'package:diary/UI/transCards/cardFlipper.dart';
-import 'package:diary/UI/transCards/DateCard.dart';
-import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 
 class LeafPage extends StatefulWidget {
 
@@ -28,8 +23,8 @@ class LeafState extends State<LeafPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: Icon(Icons.arrow_back_ios),
-      floatingActionButton:fAB(),
+      endDrawer: Icon(Icons.arrow_back_ios,color: Colors.white,),
+      floatingActionButton:FabWithIcons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor:Colors.black,
       appBar: AppBar(toolbarOpacity:0.0 ,backgroundColor: Colors.transparent,),
@@ -67,32 +62,32 @@ class LeafState extends State<LeafPage> {
 
   fAB()
   {
-    return FloatingActionButton(onPressed:_buildFab,backgroundColor: Colors.white,child:Icon(Icons.mode_edit,color: Colors.amber,),highlightElevation: 3.0,elevation: 6.0,);
+    //return FloatingActionButton(isExtended:true,onPressed:_buildFab,backgroundColor: Colors.white,child:Icon(Icons.mode_edit,color: Colors.amber,),highlightElevation: 3.0,elevation: 6.0,);
   }
 
-  Widget _buildFab() {
-    final icons = [Icons.sms, Icons.image, Icons.videocam];
-    return AnchoredOverlay(
-      showOverlay: true,
-      overlayBuilder: (context, offset) {
-        return CenterAbout(
-          position: Offset(offset.dx, offset.dy - icons.length * 35.0),
-          child: FabWithIcons(
-            icons: icons,
-            onIconTapped:_selectedFab ,
-          ),
-        );
-      },
-      child: FloatingActionButton(
-        onPressed: () {
-          print("Fab");
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-        elevation: 2.0,
-      ),
-    );
-  }
+//  Widget _buildFab() {
+//    final icons = [Icons.sms, Icons.image, Icons.videocam];
+//    return AnchoredOverlay(
+//      showOverlay: true,
+//      overlayBuilder: (context, offset) {
+//        return CenterAbout(
+//          position: Offset(offset.dx, offset.dy - icons.length * 35.0),
+//          child: FabWithIcons(
+//            icons: icons,
+//            onIconTapped:_selectedFab ,
+//          ),
+//        );
+//      },
+//      child: FloatingActionButton(
+//        onPressed: () {
+//          print("Fab");
+//        },
+//        tooltip: 'add',
+//        child: Icon(Icons.mode_edit,color: Colors.deepOrangeAccent,),
+//        elevation: 2.0,
+//      ),
+//    );
+//  }
 
   void _selectedFab(int index) {
 //    setState(() {

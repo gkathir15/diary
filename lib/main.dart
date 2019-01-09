@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 elevation: 2.0,
                 onPressed: () {
                   // ShowDialogIFCardNotPresent(context);
-                  createOrNaviagateToPage(todayDateAsDDMMYY(),fContext);
+                  createOrNavigateToPage(todayDateAsDDMMYY(),fContext);
                 }),
             body: Container(
               decoration: new BoxDecoration(
@@ -279,18 +279,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return formattedDate;
   }
 
-  createOrNaviagateToPage(String dateString,BuildContext context) async {
+  createOrNavigateToPage(String dateString,BuildContext context) async {
     QuerySnapshot querySnapshot =
         await fireStore.collection(Collection_DIARY_DATA).getDocuments();
     List<DocumentSnapshot> docs = querySnapshot.documents;
 
-    for (DocumentSnapshot d in docs) {
-      if (d.documentID == dateString)
-        Navigator.of(context).push(new MaterialPageRoute(
-            builder: (BuildContext context) =>
-            LeafPage(pageDate: dateString)));          print("fab on exixting page");
-        return;
-    }
+//    for (DocumentSnapshot d in docs) {
+//      if (d.documentID == dateString)
+//        Navigator.of(context).push(new MaterialPageRoute(
+//            builder: (BuildContext context) =>
+//            LeafPage(pageDate: dateString)));          print("fab on exixting page");
+//        break;
+//    }
     fireStore
         .collection(Collection_DIARY_DATA)
         .document(todayDateAsDDMMYY())
