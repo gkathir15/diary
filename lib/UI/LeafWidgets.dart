@@ -86,4 +86,11 @@ class LeafData extends StatelessWidget {
     return FittedBox();
     //TODO
   }
+
+  Widget returnEditText(Function onSubmit,TextEditingController txtEditController)
+  {
+    return FittedBox(
+      fit: BoxFit.fitWidth,alignment: Alignment.bottomCenter,child: TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,textAlign: TextAlign.justify,textInputAction: TextInputAction.done,onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,maxLines: 3,decoration: const InputDecoration(),),
+    );
+  }
 }

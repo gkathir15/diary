@@ -19,12 +19,13 @@ class LeafState extends State<LeafPage> {
 
   int fabSelectedNo =0;
   ScrollController scrollController;
+  final icons = [Icons.sms, Icons.image, Icons.videocam];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Icon(Icons.arrow_back_ios,color: Colors.white,),
-      floatingActionButton:FabWithIcons(),
+      floatingActionButton:FabWithIcons(icons: icons,mainIcon: Icons.mode_edit,onIconTapped: _selectedFab,iconColor: Colors.amber,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor:Colors.black,
       appBar: AppBar(toolbarOpacity:0.0 ,backgroundColor: Colors.transparent,),

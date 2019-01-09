@@ -13,6 +13,7 @@ class ProfilePage extends StatelessWidget
             children: <Widget>[
               Text("Welcome"),
               Text(fireBaseUser.displayName),
+
             ],
           ),)
       ),
