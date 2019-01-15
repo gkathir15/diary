@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:diary/constants/AppConstants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diary/main.dart';
+import 'package:path/path.dart';
 
 class LeafData extends StatelessWidget {
   final String data, fontFamily, fontColor, writerImgUrl, writerName, paraType;
@@ -87,10 +88,30 @@ class LeafData extends StatelessWidget {
     //TODO
   }
 
-  Widget returnEditText(Function onSubmit,TextEditingController txtEditController)
-  {
-    return FittedBox(
-      fit: BoxFit.fitWidth,alignment: Alignment.bottomCenter,child: TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,textAlign: TextAlign.justify,textInputAction: TextInputAction.done,onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,maxLines: 3,decoration: const InputDecoration(),),
+
+}
+Widget returnEditText(Function onSubmit,TextEditingController txtEditController,BuildContext context,FocusNode focusNode)
+{
+  return
+//    FittedBox(
+//    fit: BoxFit.scaleDown,alignment: Alignment.bottomCenter,
+//    child:
+
+    Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,
+          textAlign: TextAlign.justify,textInputAction: TextInputAction.send,
+          onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,
+          maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,
+          focusNode: focusNode,
+          maxLines: 3,decoration: const InputDecoration(),style: TextStyle(inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
+        )
     );
-  }
+//    TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,
+//      textAlign: TextAlign.justify,textInputAction: TextInputAction.done,
+//      onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,
+//      maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,
+//      maxLines: 3,decoration: const InputDecoration(),
+//    );
+ // );
 }

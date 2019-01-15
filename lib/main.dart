@@ -257,20 +257,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
-  List<TimelineModel> getTimeLineSnapshot(
-      AsyncSnapshot<QuerySnapshot> qSnapshot) {
-    print(qSnapshot.data.documents.length);
-    List<TimelineModel> _list = new List();
-    if (qSnapshot.data.documents != null) {
-      for (int i = 0; i < qSnapshot.data.documents.length; i++) {
-        _list.add(new TimelineModel(
-            id: qSnapshot.data.documents[i]['DATE'],
-            title: qSnapshot.data.documents[i]['DATE']));
-      }
-    }
-    print("list len" + _list.length.toString());
-    return _list;
-  }
+
 
   String todayDateAsDDMMYY() {
     String formattedDate;
