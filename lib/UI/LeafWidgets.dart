@@ -103,7 +103,7 @@ Widget returnEditText(Function onSubmit,TextEditingController txtEditController,
           textAlign: TextAlign.justify,textInputAction: TextInputAction.send,
           onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,
           maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,
-          focusNode: focusNode,
+         // focusNode: focusNode,
           maxLines: 3,decoration: const InputDecoration(),style: TextStyle(inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
         )
     );

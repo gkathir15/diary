@@ -129,14 +129,14 @@ class LeafState extends State<LeafPage> {
 
   }
 
-  void _listener(){
-    if(focusNode.hasFocus){
-      // keyboard appeared
-    }else{
-      // keyboard dismissed
-      Navigator.pop(context);
-    }
-  }
+//  void _listener(){
+//    if(focusNode.hasFocus){
+//      // keyboard appeared
+//    }else{
+//      // keyboard dismissed
+//      Navigator.pop(context);
+//    }
+//  }
   TextEditingController textEditingController;
   FocusNode focusNode = new FocusNode();
   
@@ -148,10 +148,10 @@ class LeafState extends State<LeafPage> {
 
   showBottomSheetEditText(BuildContext context)
   {
-    focusNode.addListener(_listener);
+    //focusNode.addListener(_listener);
     showModalBottomSheet(context: context,builder: (BuildContext cxt){
       return Container(
-        color: Colors.amber,
+        color: Colors.black38,
         child:returnEditText(submitData(), textEditingController,context,focusNode),);
     });
 
@@ -160,6 +160,7 @@ class LeafState extends State<LeafPage> {
 
 
   void _selectedFab(int index) {
+    print("fab"+index.toString());
 //    setState(() {
 //      fabSelectedNo = 'FAB: $index';
 //    });
