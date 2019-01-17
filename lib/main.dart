@@ -67,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double scrollPercent = 0.0;
-  List<CardViewModel> demCards = demoCards;
+  List<DiaryDataModel> demCards ;
   BuildContext fContext;
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'DateCard.dart';
 class AnimCards extends StatefulWidget {
 
 
-  final List<CardViewModel> cards;
+  final List<DiaryDataModel> cards;
   final Function animOnScroll;
  final double scrollPercent ;
 
@@ -73,7 +73,7 @@ class _AnimCardsState extends State<AnimCards> {
 }
 
 class CardFlipper extends StatefulWidget {
-  final List<CardViewModel> cards;
+  final List<DiaryDataModel> cards;
   final Function onScroll;
 
   CardFlipper({
@@ -148,7 +148,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 
   List<Widget> _buildCards() {
     int index = -1;
-    return widget.cards.map((CardViewModel viewModel) {
+    return widget.cards.map((DiaryDataModel viewModel) {
       ++index;
       return _buildCard(viewModel, index, widget.cards.length, scrollPercent);
     }).toList();
@@ -197,7 +197,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   }
 
   Widget _buildCard(
-    CardViewModel viewModel,
+    DiaryDataModel viewModel,
     int cardIndex,
     int cardCount,
     double scrollPercent,
@@ -212,7 +212,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
         child: new Transform(
           transform: _buildCardProjection(cardScrollPercent - cardIndex),
           child: new DateCard(
-            viewModel: viewModel,
+            diaryDataModel: viewModel,
             parallaxPercent: parallax,
           ),
         ),

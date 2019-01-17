@@ -21,6 +21,8 @@ final String IS_READ_BY_RECIEVER = "IS_READ_BY_RECIEVER";
 
 final String BG_URL = "BG_URL";
 
+final String LAST_EDIT_BY = "LAST_EDIT_BY";
+
 //LeafPage Constants
 final String PARA_DATA ="PARA_DATA";
 final String PARA_TYPE = "PARA_TYPE";

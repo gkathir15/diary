@@ -65,3 +65,29 @@ class CardViewModel {
     this.cardinalDirection,
   });
 }
+
+
+class DiaryDataModel{
+  final String Collection_DIARY_DATA;
+  final String FIELD_ID;
+  final String CARD_CREATED_BY;
+
+  final String CARD_CREATED_AT;
+
+  final String CREATED_DAY;
+
+  final String IS_READ_BY_CREATOR;
+
+  final String IS_READ_BY_RECIEVER;
+
+  final String BG_URL;
+
+  final String LAST_EDIT_BY;
+
+  DiaryDataModel(this.Collection_DIARY_DATA, this.FIELD_ID,
+      this.CARD_CREATED_BY, this.CARD_CREATED_AT, this.CREATED_DAY,
+      this.IS_READ_BY_CREATOR, this.IS_READ_BY_RECIEVER, this.BG_URL,
+      this.LAST_EDIT_BY);
+
+
+}
