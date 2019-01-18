@@ -8,7 +8,7 @@ final String PROFILE_HERO_KEY = "GprofilePicHeroKey";
 //FireStore Keys
 
 final String Collection_DIARY_DATA = "DIARY_DATA";
-final String FIELD_ID = "DATE";
+final String DATE_ID = "DATE";
 final String CARD_CREATED_BY = "CARD_CREATED_BY";
 
 final String CARD_CREATED_AT = "CARD_CREATED_AT";
@@ -24,7 +24,7 @@ final String BG_URL = "BG_URL";
 final String LAST_EDIT_BY = "LAST_EDIT_BY";
 
 //LeafPage Constants
-final String PARA_DATA ="PARA_DATA";
+final String PARA_DATA = "PARA_DATA";
 final String PARA_TYPE = "PARA_TYPE";
 const String TYPE_IMAGE = "TYPE_IMAGE";
 const String TYPE_VIDEO = "TYPE_VIDEO";
@@ -61,12 +61,10 @@ class AppConstants {
     }
   }
 
-  static String defaultIfNull(String value,String defaultValue)
-  {
-    return value.isNotEmpty && value!=null?value:defaultValue;
+  static String defaultIfNull(String value, String defaultValue) {
+    return value.isNotEmpty && value != null ? value : defaultValue;
   }
 
   //Colors
-
 
 }

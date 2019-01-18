@@ -4,7 +4,8 @@ import 'card_data.dart';
 
 class DateCard extends StatelessWidget {
   final DiaryDataModel diaryDataModel;
-  final double parallaxPercent; // [0.0, 1.0] (0.0 for all the way right, 1.0 for all the way left)
+  final double
+      parallaxPercent; // [0.0, 1.0] (0.0 for all the way right, 1.0 for all the way left)
 
   DateCard({
     this.diaryDataModel,
@@ -24,8 +25,12 @@ class DateCard extends StatelessWidget {
               translation: new Offset(parallaxPercent * 2.0, 0.0),
               child: new OverflowBox(
                 maxWidth: double.infinity,
-                child: new CachedNetworkImage(imageUrl:
-                  diaryDataModel.BG_URL,
+                child: new CachedNetworkImage(
+                  placeholder: Image.asset("assets/jpgs/mainBg.jpg"),
+                  imageUrl: diaryDataModel.lBG_URL,
+//                  width: double.infinity,
+//                  height: double.infinity,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -37,9 +42,10 @@ class DateCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             new Padding(
-              padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+              padding:
+                  const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
               child: new Text(
-                '${diaryDataModel.CREATED_DAY}'.toUpperCase(),
+                '${diaryDataModel.lCREATED_DAY}'.toUpperCase(),
                 style: new TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,
@@ -55,7 +61,7 @@ class DateCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 new Text(
-                  '${diaryDataModel.CARD_CREATED_AT} ',
+                  '${diaryDataModel.lCARD_CREATED_AT.toDate().toString()} ',
                   style: new TextStyle(
                     color: Colors.white,
                     fontSize: 140.0,
@@ -87,7 +93,7 @@ class DateCard extends StatelessWidget {
                 new Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: new Text(
-                    '${diaryDataModel.CARD_CREATED_BY}º',
+                    '${diaryDataModel.lCARD_CREATED_BY}º',
                     style: new TextStyle(
                       color: Colors.white,
                       fontFamily: 'petita',
@@ -122,7 +128,7 @@ class DateCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       new Text(
-                        '${diaryDataModel.IS_READ_BY_RECIEVER}',
+                        '${diaryDataModel.lIS_READ_BY_RECIEVER}',
                         style: new TextStyle(
                           color: Colors.white,
                           fontFamily: 'petita',
@@ -138,7 +144,7 @@ class DateCard extends StatelessWidget {
                         ),
                       ),
                       new Text(
-                        '${diaryDataModel.LAST_EDIT_BY}',
+                        '${diaryDataModel.lLAST_EDIT_BY}',
                         style: new TextStyle(
                           color: Colors.white,
                           fontFamily: 'petita',
@@ -157,5 +163,3 @@ class DateCard extends StatelessWidget {
     );
   }
 }
-
-

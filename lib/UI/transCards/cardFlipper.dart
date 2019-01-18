@@ -5,37 +5,33 @@ import 'package:flutter/material.dart';
 import 'AnimCardBottomBar.dart';
 import 'DateCard.dart';
 
-
 class AnimCards extends StatefulWidget {
-
-
   final List<DiaryDataModel> cards;
   final Function animOnScroll;
- final double scrollPercent ;
+  final double scrollPercent;
 
   AnimCards(
-      {Key key, @required this.cards,@required this.animOnScroll,this.scrollPercent}) : super(key: key
-  );
+      {Key key,
+      @required this.cards,
+      @required this.animOnScroll,
+      this.scrollPercent})
+      : super(key: key);
 
   @override
   _AnimCardsState createState() => new _AnimCardsState();
 }
 
 class _AnimCardsState extends State<AnimCards> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
         decoration: new BoxDecoration(
             image: new DecorationImage(
-              image: new AssetImage("assets/jpgs/mainBg.jpg"),
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            )),
-      child:
-        new Scaffold(
+          image: new AssetImage("assets/jpgs/mainBg.jpg"),
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+        )),
+        child: new Scaffold(
           backgroundColor: Colors.transparent,
           body: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -67,8 +63,7 @@ class _AnimCardsState extends State<AnimCards> {
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 }
 
@@ -85,7 +80,8 @@ class CardFlipper extends StatefulWidget {
   _CardFlipperState createState() => new _CardFlipperState();
 }
 
-class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin {
+class _CardFlipperState extends State<CardFlipper>
+    with TickerProviderStateMixin {
   double scrollPercent = 0.0;
   Offset startDrag;
   double startDragPercentScroll;
@@ -98,13 +94,13 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     super.initState();
 
     finishScrollController = new AnimationController(
-      duration: const Duration(milliseconds:200),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     )
       ..addListener(() {
         setState(() {
-          scrollPercent =
-              lerpDouble(finishScrollStart, finishScrollEnd, finishScrollController.value);
+          scrollPercent = lerpDouble(
+              finishScrollStart, finishScrollEnd, finishScrollController.value);
 
           if (widget.onScroll != null) {
             widget.onScroll(scrollPercent);
@@ -125,7 +121,8 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     final singleCardDragPercent = dragDistance / context.size.width;
 
     setState(() {
-      scrollPercent = (startDragPercentScroll + (-singleCardDragPercent / widget.cards.length))
+      scrollPercent = (startDragPercentScroll +
+              (-singleCardDragPercent / widget.cards.length))
           .clamp(0.0, 1.0 - (1 / widget.cards.length));
       print('percentScroll: $scrollPercent');
 
@@ -137,7 +134,8 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 
   void _onPanEnd(DragEndDetails details) {
     finishScrollStart = scrollPercent;
-    finishScrollEnd = (scrollPercent * widget.cards.length).round() / widget.cards.length;
+    finishScrollEnd =
+        (scrollPercent * widget.cards.length).round() / widget.cards.length;
     finishScrollController.forward(from: 0.0);
 
     setState(() {
@@ -188,10 +186,13 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     final rotationPointMultiplier = angle > 0.0 ? angle / angle.abs() : 1.0;
     print('Angle: $angle');
     projection *= new Matrix4.translationValues(
-            horizontalTranslation + (rotationPointMultiplier * 300.0), 0.0, 0.0) *
+            horizontalTranslation + (rotationPointMultiplier * 300.0),
+            0.0,
+            0.0) *
         new Matrix4.rotationY(angle) *
         new Matrix4.translationValues(0.0, 0.0, radius) *
-        new Matrix4.translationValues(-rotationPointMultiplier * 300.0, 0.0, 0.0);
+        new Matrix4.translationValues(
+            -rotationPointMultiplier * 300.0, 0.0, 0.0);
 
     return projection;
   }
@@ -233,4 +234,3 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     );
   }
 }
-

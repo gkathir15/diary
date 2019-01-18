@@ -24,6 +24,7 @@ import 'dart:core';
 import 'package:connectivity/connectivity.dart';
 import 'UI/dialogs/NewPageDialog.dart';
 import 'dart:ui';
+import 'UI/transCards/card_data.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -32,7 +33,6 @@ Firestore fireStore;
 SharedPreferences sharedPreferences;
 
 void main() {
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
   fireStore = Firestore.instance;
@@ -67,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double scrollPercent = 0.0;
-  List<DiaryDataModel> demCards ;
+  List<DiaryDataModel> demCards;
   BuildContext fContext;
   @override
   Widget build(BuildContext context) {
@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 elevation: 2.0,
                 onPressed: () {
                   // ShowDialogIFCardNotPresent(context);
-                  createOrNavigateToPage(todayDateAsDDMMYY(),fContext);
+                  createOrNavigateToPage(todayDateAsDDMMYY(), fContext);
                 }),
             body: Container(
               decoration: new BoxDecoration(
@@ -177,12 +177,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               child: StreamBuilder(
                   stream:
                       Firestore.instance.collection('DIARY_DATA').snapshots(),
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData)
                       return Text("Loading",
                           style: new TextStyle(color: Colors.white));
                     return AnimCards(
-                      cards: demCards,
+                      cards:
+                          DiaryDataModel.fromSnapShot(snapshot.data.documents),
                       animOnScroll: (double scrollPercent) {
                         setState(() => this.scrollPercent = scrollPercent);
                       },
@@ -196,14 +197,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String _lastSelected = 'TAB: 0';
 
   void _selectedTab(int index) {
-    switch(index)
-    {
+    switch (index) {
       case 2:
-        Navigator.of(fContext).push(MaterialPageRoute(builder: (BuildContext context) =>LeafPage(pageDate: todayDateAsDDMMYY())));
+        Navigator.of(fContext).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                LeafPage(pageDate: todayDateAsDDMMYY())));
         break;
       case 3:
-        Navigator.of(fContext).push(MaterialPageRoute(builder: (BuildContext context) =>ProfilePage()));
-
+        Navigator.of(fContext).push(MaterialPageRoute(
+            builder: (BuildContext context) => ProfilePage()));
     }
   }
 
@@ -257,8 +259,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
-
-
   String todayDateAsDDMMYY() {
     String formattedDate;
     DateTime dateTime = DateTime.now();
@@ -266,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return formattedDate;
   }
 
-  createOrNavigateToPage(String dateString,BuildContext context) async {
+  createOrNavigateToPage(String dateString, BuildContext context) async {
     QuerySnapshot querySnapshot =
         await fireStore.collection(Collection_DIARY_DATA).getDocuments();
     List<DocumentSnapshot> docs = querySnapshot.documents;
@@ -282,18 +282,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         .collection(Collection_DIARY_DATA)
         .document(todayDateAsDDMMYY())
         .setData({
-      FIELD_ID: todayDateAsDDMMYY(),
+      DATE_ID: todayDateAsDDMMYY(),
       CARD_CREATED_AT: Timestamp.now(),
       CARD_CREATED_BY: fireBaseUser.email,
       CREATED_DAY: AppConstants.getDay(DateTime.now().weekday),
       IS_READ_BY_CREATOR: true,
       IS_READ_BY_RECIEVER: false,
       BG_URL: sharedPreferences.get(SPLASH_Pic + DateTime.now().day.toString()),
-    }).whenComplete((){
+    }).whenComplete(() {
       print("fab on created page");
       Navigator.of(context).push(new MaterialPageRoute(
-          builder: (BuildContext context) =>
-           LeafPage(pageDate: dateString)));
+          builder: (BuildContext context) => LeafPage(pageDate: dateString)));
     });
   }
 
