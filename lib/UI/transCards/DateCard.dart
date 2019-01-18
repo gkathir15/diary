@@ -61,7 +61,7 @@ class DateCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 new Text(
-                  '${diaryDataModel.lCARD_CREATED_AT.toDate().toString()} ',
+                  '${diaryDataModel.lCARD_CREATED_AT.toDate().day.toString() + "-" + diaryDataModel.lCARD_CREATED_AT.toDate().month.toString()} ',
                   style: new TextStyle(
                     color: Colors.white,
                     fontSize: 140.0,
