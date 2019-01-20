@@ -237,6 +237,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       idToken: googleAuth.idToken,
     );
     setState(() {});
+
   }
 
   getSplashBgDate() async {
@@ -267,34 +268,44 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   createOrNavigateToPage(String dateString, BuildContext context) async {
-    QuerySnapshot querySnapshot =
-        await fireStore.collection(Collection_DIARY_DATA).getDocuments();
-    List<DocumentSnapshot> docs = querySnapshot.documents;
-
-//    for (DocumentSnapshot d in docs) {
-//      if (d.documentID == dateString)
-//        Navigator.of(context).push(new MaterialPageRoute(
-//            builder: (BuildContext context) =>
-//            LeafPage(pageDate: dateString)));          print("fab on exixting page");
-//        break;
-//    }
-    fireStore
-        .collection(Collection_DIARY_DATA)
-        .document(todayDateAsDDMMYY())
-        .setData({
-      DATE_ID: todayDateAsDDMMYY(),
-      CARD_CREATED_AT: Timestamp.now(),
-      CARD_CREATED_BY: fireBaseUser.email,
-      CREATED_DAY: AppConstants.getDay(DateTime.now().weekday),
-      IS_READ_BY_CREATOR: true,
-      IS_READ_BY_RECIEVER: false,
-      BG_URL: sharedPreferences.get(SPLASH_Pic + DateTime.now().day.toString()),
-    }).whenComplete(() {
-      print("fab on created page");
-      Navigator.of(context).push(new MaterialPageRoute(
-          builder: (BuildContext context) => LeafPage(pageDate: dateString)));
+    fireStore.collection(Collection_DIARY_DATA).document(dateString).get().then((onValue) {
+      if (onValue.exists) {
+        print("nav");
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext context) => LeafPage(pageDate: dateString)));
+      }
+      else {
+        print("Create nav");
+        fireStore
+            .collection(Collection_DIARY_DATA)
+            .document(todayDateAsDDMMYY())
+            .setData({
+          DATE_ID: todayDateAsDDMMYY(),
+          CARD_CREATED_AT: Timestamp.now(),
+          CARD_CREATED_BY: fireBaseUser.email,
+          CREATED_DAY: AppConstants.getDay(DateTime
+              .now()
+              .weekday),
+          IS_READ_BY_CREATOR: true,
+          IS_READ_BY_RECIEVER: false,
+          BG_URL: sharedPreferences.get(SPLASH_Pic + DateTime
+              .now()
+              .day
+              .toString()),
+          PARA_ARRAY: [],
+          PARA_COUNT:0
+        }, merge: true).whenComplete(() {
+          print("fab on created page");
+          Navigator.of(context).push(new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  LeafPage(pageDate: dateString)));
+        });
+      }
     });
-  }
+
+   }
+
+
 
   bool getNetWorkStatus() {
     var connectivityResult = (new Connectivity().checkConnectivity());
@@ -348,7 +359,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    if(fireBaseUser==null)
     _handleSilentSignIn();
+
     getSplashBgDate();
     super.initState();
   }

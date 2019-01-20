@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diary/UI/CustomBottomBar/fab_with_icons.dart';
 import 'package:diary/UI/CustomBottomBar/layout.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 import 'LeafWidgets.dart';
 class LeafPage extends StatefulWidget {
   final String pageDate;
+
 
   const LeafPage({Key key, this.pageDate}) : super(key: key);
 
@@ -54,9 +56,9 @@ class LeafState extends State<LeafPage> {
                     controller: scrollController,
                     itemBuilder: (BuildContext context, int index,
                         Animation<double> animation) {
-                      return CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      );
+                      return LeafData(data:getParaData(snapshot,PARA_DATA,index),fontColor: Colors.white,fontFamily: getParaData(snapshot, PARA_FONT, index),
+                        writerImgUrl: getParaData(snapshot, PARA_CREATOR_URL, index),
+                        writerName: getParaData(snapshot, PARA_WRITER, index),paraType: getParaData(snapshot, PARA_TYPE, index),);
                     },
                     initialItemCount: 0,
                     scrollDirection: Axis.vertical,
@@ -73,6 +75,11 @@ class LeafState extends State<LeafPage> {
       )
     );
 
+  }
+
+  String getParaData(AsyncSnapshot docSnap,String idField,int index)
+  {
+    return docSnap.data.document[PARA_ARRAY][index][idField];
   }
 
   @override
@@ -138,21 +145,48 @@ class LeafState extends State<LeafPage> {
 //    }
 //  }
   TextEditingController textEditingController;
-  FocusNode focusNode = new FocusNode();
+  String fontFamily = "bloom";
+  //FocusNode focusNode = new FocusNode();
+
 
 
   submitData()
   {
 
+    print("submitData");
+    String story;
+    if(textEditingController.text!=null&&textEditingController.text.length!=0) {
+      story = textEditingController.text;
+
+      print(story.toString());
+      textEditingController.clear();
+
+      fireStore
+          .collection('DIARY_DATA')
+          .document(widget.pageDate).
+
+//          .add({PARA_ARRAY: [{
+//        PARA_TYPE: TYPE_TEXT,
+//        PARA_DATA: story,
+//        PARA_FONT: fontFamily,
+//        PARA_TIMESTAMP: Timestamp.now(),
+//        PARA_WRITER: fireBaseUser.email,
+//        PARA_CREATOR_URL: fireBaseUser.photoUrl
+//      }
+//      ]});
+    }
+
   }
+
 
   showBottomSheetEditText(BuildContext context)
   {
+    textEditingController = TextEditingController();
     //focusNode.addListener(_listener);
     showModalBottomSheet(context: context,builder: (BuildContext cxt){
       return Container(
         color: Colors.black38,
-        child:returnEditText(submitData(), textEditingController,context,focusNode),);
+        child:returnEditText(submitData(), textEditingController,context),);
     });
 
   }

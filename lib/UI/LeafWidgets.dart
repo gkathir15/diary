@@ -5,7 +5,8 @@ import 'package:diary/main.dart';
 import 'package:path/path.dart';
 
 class LeafData extends StatelessWidget {
-  final String data, fontFamily, fontColor, writerImgUrl, writerName, paraType;
+  final String data, fontFamily,  writerImgUrl, writerName, paraType;
+  final Color fontColor;
 
   const LeafData(
       {Key key,
@@ -90,21 +91,21 @@ class LeafData extends StatelessWidget {
 
 
 }
-Widget returnEditText(Function onSubmit,TextEditingController txtEditController,BuildContext context,FocusNode focusNode)
+Widget returnEditText(Function onSubmit,TextEditingController txtEditController,BuildContext context)
 {
   return
-//    FittedBox(
-//    fit: BoxFit.scaleDown,alignment: Alignment.bottomCenter,
-//    child:
 
     Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,
           textAlign: TextAlign.justify,textInputAction: TextInputAction.send,
-          onSubmitted: onSubmit,autocorrect: true,keyboardAppearance: Brightness.dark,
+          onSubmitted: onSubmit,
+          //onEditingComplete:onSubmit,
+
+          autocorrect: true,keyboardAppearance: Brightness.dark,
           maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,
          // focusNode: focusNode,
-          maxLines: 3,decoration: const InputDecoration(),style: TextStyle(inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
+          maxLines: 3,decoration: const InputDecoration(),style: TextStyle(fontFamily:'bloom',inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
         )
     );
 //    TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,

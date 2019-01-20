@@ -8,6 +8,7 @@ final String PROFILE_HERO_KEY = "GprofilePicHeroKey";
 //FireStore Keys
 
 final String Collection_DIARY_DATA = "DIARY_DATA";
+final String PARA_ARRAY = "PARA";
 final String DATE_ID = "DATE";
 final String CARD_CREATED_BY = "CARD_CREATED_BY";
 
@@ -22,6 +23,7 @@ final String IS_READ_BY_RECIEVER = "IS_READ_BY_RECIEVER";
 final String BG_URL = "BG_URL";
 
 final String LAST_EDIT_BY = "LAST_EDIT_BY";
+final PARA_COUNT = "COUNT";
 
 //LeafPage Constants
 final String PARA_DATA = "PARA_DATA";
@@ -35,6 +37,7 @@ final String PARA_WRITER = "PARA_WRITER";
 final String PARA_TIMESTAMP = "PARA_TIMESTAMP";
 final String PARA_ID = 'PARA_ID';
 final String PARA_FONT = 'PARA_FONT';
+final String PARA_CREATOR_URL ="CREATOR_URL";
 
 // Date Constants
 
