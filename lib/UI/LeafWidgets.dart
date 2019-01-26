@@ -22,19 +22,19 @@ class LeafData extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (paraType) {
       case TYPE_TEXT:
-        returnText();
+       return  returnText();
         break;
       case TYPE_IMAGE:
-        returnImage();
+        return returnImage();
         break;
       case TYPE_AUDIO:
-        returnAudio();
+        return returnAudio();
         break;
       case TYPE_VIDEO:
-        returnVideo();
+        return returnVideo();
         break;
       case TYPE_LINK:
-        returnLink();
+        return returnLink();
         break;
     }
   }
@@ -59,6 +59,8 @@ class LeafData extends StatelessWidget {
                 child: new CachedNetworkImage(
                     imageUrl: AppConstants.defaultIfNull(
                         writerImgUrl, fireBaseUser.photoUrl)),
+                radius: 5.0,
+
               ),
               new Text(AppConstants.defaultIfNull(
                   writerName, fireBaseUser.displayName))

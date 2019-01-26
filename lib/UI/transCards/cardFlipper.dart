@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:ui' show lerpDouble;
+import 'package:diary/UI/LeafPage.dart';
+
 import 'card_data.dart';
 import 'package:flutter/material.dart';
 import 'AnimCardBottomBar.dart';
@@ -212,9 +214,15 @@ class _CardFlipperState extends State<CardFlipper>
         padding: const EdgeInsets.all(16.0),
         child: new Transform(
           transform: _buildCardProjection(cardScrollPercent - cardIndex),
-          child: new DateCard(
-            diaryDataModel: viewModel,
-            parallaxPercent: parallax,
+          child: InkWell(
+            onTap: (){
+              Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) => LeafPage(pageDate: viewModel.lDATE)));
+            },
+            child: new DateCard(
+              diaryDataModel: viewModel,
+              parallaxPercent: parallax,
+            ),
           ),
         ),
       ),

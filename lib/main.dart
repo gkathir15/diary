@@ -68,7 +68,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double scrollPercent = 0.0;
   List<DiaryDataModel> demCards;
-  BuildContext fContext;
+ static  BuildContext fContext;
   @override
   Widget build(BuildContext context) {
     fContext = context;
@@ -194,6 +194,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           );
   }
 
+  Function  OnTap = (String _DateString)
+  {
+    Navigator.of(fContext).push(new MaterialPageRoute(
+        builder: (BuildContext context) => LeafPage(pageDate: _DateString)));
+  };
+
   String _lastSelected = 'TAB: 0';
 
   void _selectedTab(int index) {
@@ -292,7 +298,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               .now()
               .day
               .toString()),
-          PARA_ARRAY: [],
           PARA_COUNT:0
         }, merge: true).whenComplete(() {
           print("fab on created page");

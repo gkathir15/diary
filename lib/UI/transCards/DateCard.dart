@@ -4,12 +4,13 @@ import 'card_data.dart';
 
 class DateCard extends StatelessWidget {
   final DiaryDataModel diaryDataModel;
-  final double
-      parallaxPercent; // [0.0, 1.0] (0.0 for all the way right, 1.0 for all the way left)
+  final double parallaxPercent;
+  final Function onTap;
 
   DateCard({
     this.diaryDataModel,
     this.parallaxPercent = 0.0,
+    @required this.onTap
   });
 
   @override

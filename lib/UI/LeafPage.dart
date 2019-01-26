@@ -8,6 +8,7 @@ import 'package:diary/UI/transCards/cardFlipper.dart';
 import 'package:diary/UI/transCards/DateCard.dart';
 import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 import 'LeafWidgets.dart';
+import 'package:diary/model/Para.dart';
 class LeafPage extends StatefulWidget {
   final String pageDate;
 
@@ -23,6 +24,7 @@ class LeafState extends State<LeafPage> {
   ScrollController scrollController;
   final icons = [Icons.sms, Icons.image, Icons.videocam];
   bool isShowEditText = false;
+  List<Paras> paraDataList = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -50,37 +52,40 @@ class LeafState extends State<LeafPage> {
         padding: EdgeInsets.only(left: 2.0, right: 2.0, top: 0.0, bottom: 10),
         child:
             StreamBuilder(
-              builder: (context, snapshot) {
+              builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
+                paraDataList =Paras.getParaList(snapshot.data.documents);
                 if (snapshot.hasData) {
-                  return AnimatedList(
+                  return ListView.builder(
+                    shrinkWrap: true,
                     controller: scrollController,
-                    itemBuilder: (BuildContext context, int index,
-                        Animation<double> animation) {
-                      return LeafData(data:getParaData(snapshot,PARA_DATA,index),fontColor: Colors.white,fontFamily: getParaData(snapshot, PARA_FONT, index),
-                        writerImgUrl: getParaData(snapshot, PARA_CREATOR_URL, index),
-                        writerName: getParaData(snapshot, PARA_WRITER, index),paraType: getParaData(snapshot, PARA_TYPE, index),);
-                    },
-                    initialItemCount: 0,
+                    itemCount: paraDataList.length,
                     scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context,int index)
+                    {
+                      return LeafData(data:paraDataList[index].lPARA_DATA,
+                        fontColor: Colors.white,
+                        fontFamily: paraDataList[index].lPARA_FONT,
+                        writerImgUrl:paraDataList[index].lPARA_CREATOR_URL,
+                        writerName:paraDataList[index].lPARA_WRITER ,
+                        paraType: paraDataList[index].lPARA_TYPE,);
+                    },
                   );
                 } else {
-                  return const CircularProgressIndicator();
+                  return Container(child:
+                  //const CircularProgressIndicator(),);
+                      new Image.asset("assets/pngs/emptyCat.png"),);
                 }
               },
               stream: fireStore
                   .collection('DIARY_DATA')
-                  .document(widget.pageDate)
-                  .snapshots(),
+                  .document(widget.pageDate).collection(PARA_DATA).snapshots(),
             ),
       )
     );
 
   }
 
-  String getParaData(AsyncSnapshot docSnap,String idField,int index)
-  {
-    return docSnap.data.document[PARA_ARRAY][index][idField];
-  }
+
 
   @override
   void initState() {
@@ -159,21 +164,43 @@ class LeafState extends State<LeafPage> {
       story = textEditingController.text;
 
       print(story.toString());
-      textEditingController.clear();
+
+
+      List<dynamic> PARA = [];
 
       fireStore
           .collection('DIARY_DATA')
-          .document(widget.pageDate).
+          .document(widget.pageDate).collection(PARA_DATA).add({
+        PARA_TYPE: TYPE_TEXT,
+        PARA_DATA: story,
+        PARA_FONT: fontFamily,
+        PARA_TIMESTAMP: Timestamp.now(),
+        PARA_WRITER: fireBaseUser.email,
+        PARA_CREATOR_URL: fireBaseUser.photoUrl
+      });
 
-//          .add({PARA_ARRAY: [{
+     // fireStore.collection(widget.pageDate).document(PARA_COUNT).updateData(data)
+//      });
+//      PARA.add(
+//          {
 //        PARA_TYPE: TYPE_TEXT,
 //        PARA_DATA: story,
 //        PARA_FONT: fontFamily,
 //        PARA_TIMESTAMP: Timestamp.now(),
 //        PARA_WRITER: fireBaseUser.email,
 //        PARA_CREATOR_URL: fireBaseUser.photoUrl
-//      }
-//      ]});
+//      });
+//      Paras paras = new Paras(PARA: PARA);
+//
+//      final TransactionHandler transactionHandler = (Transaction transaction) async {
+//        await transaction.update(fireStore
+//            .collection('DIARY_DATA').document(PARA_DATA), paras.toMap());
+//      };
+//      print(paras.toMap().toString());
+//      Firestore.instance.runTransaction(transactionHandler);
+      textEditingController.clear();
+      Navigator.of(context).pop();
+
     }
 
   }

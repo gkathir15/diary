@@ -1,24 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:diary/constants/AppConstants.dart';
+import 'package:diary/constants/AppConstants.dart';
 
-class Para {
-  List<dynamic> PARA = [];
-  int cartItemsCount;
+class Paras {
 
-  Cart({@required this.productsInCart, @required this.cartItemsCount});
 
-  Para.fromDocument(DocumentSnapshot document)
-      : productsInCart = document[PRODUCTS_IN_CART],
-        cartItemsCount = document[CART_ITEMS_COUNT];
+  final String lPARA_TYPE;
+  final String lPARA_DATA;
+  final String lPARA_FONT;
+  final Timestamp lPARA_TIMESTAMP;
+  final String lPARA_WRITER;
+  final String lPARA_CREATOR_URL;
 
-  Para.fromMap(Map map)
-      : productsInCart = map[PRODUCTS_IN_CART],
-        cartItemsCount = map[CART_ITEMS_COUNT];
+  Paras(this.lPARA_TYPE, this.lPARA_DATA, this.lPARA_FONT, this.lPARA_TIMESTAMP,
+      this.lPARA_WRITER, this.lPARA_CREATOR_URL);
 
-  Map<String, dynamic> toMap() {
-    return {
-      PRODUCTS_IN_CART: productsInCart,
-      CART_ITEMS_COUNT: cartItemsCount,
-    };
+
+  static List<Paras> getParaList(List<DocumentSnapshot> snapshot)
+  {
+   List<Paras> paraList = new List();
+   for (int i = 0; i < snapshot.length; i++) {
+     paraList.add(new Paras(
+         snapshot[i][PARA_TYPE],
+         snapshot[i][PARA_DATA],
+         snapshot[i][PARA_FONT],
+         snapshot[i][PARA_TIMESTAMP],
+         snapshot[i][PARA_WRITER],
+         snapshot[i][PARA_CREATOR_URL],
+         ));
+   }
+   print('Paras.getParaList   '+paraList.length.toString());
+   return paraList;
   }
+
+
+
 }
