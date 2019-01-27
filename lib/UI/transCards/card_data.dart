@@ -42,6 +42,6 @@ class DiaryDataModel {
           snapshot[i][LAST_EDIT_BY],
           ""));
     }
-    return diaryDatas;
+    return diaryDatas.reversed.toList(growable: true);
   }
 }

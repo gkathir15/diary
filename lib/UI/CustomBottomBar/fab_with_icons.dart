@@ -54,7 +54,7 @@ class FabWithIconsState extends State<FabWithIcons> with TickerProviderStateMixi
         ),
         child: FloatingActionButton(
           backgroundColor: backgroundColor,
-          mini: true,
+          mini: false,
           child: Icon(widget.icons[index], color: foregroundColor),
           onPressed: () => _onTapped(index),
         ),
@@ -64,6 +64,8 @@ class FabWithIconsState extends State<FabWithIcons> with TickerProviderStateMixi
 
   Widget _buildFab(IconData icon,Color icoColor,Color fabBg) {
     return FloatingActionButton(
+      foregroundColor: Colors.white,
+      backgroundColor: Colors.white,
       onPressed: () {
         if (_controller.isDismissed) {
           _controller.forward();
@@ -72,7 +74,7 @@ class FabWithIconsState extends State<FabWithIcons> with TickerProviderStateMixi
         }
       },
       tooltip: 'Increment',
-      child: Icon(icon,color: icoColor),
+      child: Icon(icon,color: Colors.black),
       elevation: 5.0,
     );
   }

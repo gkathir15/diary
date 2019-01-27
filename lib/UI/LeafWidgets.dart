@@ -1,12 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:diary/constants/AppConstants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diary/main.dart';
 import 'package:path/path.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:diary/util/ImageUtils.dart';
+import 'MQueries.dart';
 
 class LeafData extends StatelessWidget {
   final String data, fontFamily,  writerImgUrl, writerName, paraType;
   final Color fontColor;
+  final Timestamp timeStamp;
+  static BuildContext lContext;
 
   const LeafData(
       {Key key,
@@ -15,11 +22,13 @@ class LeafData extends StatelessWidget {
       this.fontColor,
       this.writerImgUrl,
       this.writerName,
-      this.paraType})
+      this.paraType,
+      this.timeStamp})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    lContext = context;
     switch (paraType) {
       case TYPE_TEXT:
        return  returnText();
@@ -40,39 +49,61 @@ class LeafData extends StatelessWidget {
   }
 
   Widget returnText() {
-    return FittedBox(
-      fit: BoxFit.fitWidth,
-      child: Column(
-        children: <Widget>[
-          new Text(
-            data,
-            softWrap: true,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                inherit: true,
-                color: Colors.white,
-                fontFamily: AppConstants.defaultIfNull(fontFamily, 'bloom')),
-          ),
-          new Row(
-            children: <Widget>[
-              new CircleAvatar(
-                child: new CachedNetworkImage(
-                    imageUrl: AppConstants.defaultIfNull(
-                        writerImgUrl, fireBaseUser.photoUrl)),
-                radius: 5.0,
+    return Padding(
+      padding: EdgeInsets.only(left: 2.0,top: 3.0,right: 2.0,bottom: 6.0),
+      child: FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Column(
+          children: <Widget>[
+            new Text(
+              data,
+              softWrap: true,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 10,
+                  inherit: true,
+                  color: Colors.white,
+                  fontFamily: 'Handlee'),
+            ),
+            new Row(
+              children: <Widget>[
+                new CircleAvatar(
+                  child: new CachedNetworkImage(
+                      imageUrl: AppConstants.defaultIfNull(
+                          writerImgUrl, fireBaseUser.photoUrl)),
+                  radius: 0.1,
 
-              ),
-              new Text(AppConstants.defaultIfNull(
-                  writerName, fireBaseUser.displayName))
-            ],
-          )
-        ],
+                ),
+                new Text(AppConstants.defaultIfNull(
+                    writerName, fireBaseUser.displayName),style: TextStyle(color: Colors.white,fontSize: MQueries.getPixelRatio(lContext)),),
+                new Text(timeAgo.format(timeStamp.toDate()),style: TextStyle(color: Colors.white,fontSize: MQueries.getPixelRatio(lContext)),),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget returnImage() {
-    return FittedBox();
+    return Padding(
+      padding: const EdgeInsets.only(left: 2.0,top: 3.0,right: 2.0,bottom: 6.0),
+      child: FittedBox(
+        child: CachedNetworkImage(placeholder: SizedBox(
+          width: 200.0,
+          height: 100.0,
+          child: Shimmer.fromColors(
+            baseColor: Colors.red,
+            highlightColor: Colors.yellow,
+            child: Container(
+              color: Colors.orangeAccent,
+              ),
+            ),
+          ),
+          imageUrl: data,
+          fadeInCurve: Curves.easeOut,
+        ),),
+    );
     //TODO
   }
 

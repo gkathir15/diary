@@ -9,9 +9,9 @@ import 'package:diary/UI/transCards/DateCard.dart';
 import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 import 'LeafWidgets.dart';
 import 'package:diary/model/Para.dart';
+import 'package:shimmer/shimmer.dart';
 class LeafPage extends StatefulWidget {
   final String pageDate;
-
 
   const LeafPage({Key key, this.pageDate}) : super(key: key);
 
@@ -42,7 +42,10 @@ class LeafState extends State<LeafPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Colors.black,
       appBar: AppBar(
-        toolbarOpacity: 0.0,
+        title: Text(widget.pageDate,style: TextStyle(color: Colors.white),),
+        centerTitle: true,
+        leading: InkWell(onTap:(){Navigator.of(context).pop();},child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+        elevation: 5.0,
         backgroundColor: Colors.transparent,
       ),
       body: new Container(
@@ -53,8 +56,8 @@ class LeafState extends State<LeafPage> {
         child:
             StreamBuilder(
               builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
-                paraDataList =Paras.getParaList(snapshot.data.documents);
-                if (snapshot.hasData) {
+                if (snapshot.hasData||paraDataList.length!=0) {
+                  paraDataList.addAll(Paras.getParaList(snapshot.data.documents));
                   return ListView.builder(
                     shrinkWrap: true,
                     controller: scrollController,
@@ -67,13 +70,14 @@ class LeafState extends State<LeafPage> {
                         fontFamily: paraDataList[index].lPARA_FONT,
                         writerImgUrl:paraDataList[index].lPARA_CREATOR_URL,
                         writerName:paraDataList[index].lPARA_WRITER ,
-                        paraType: paraDataList[index].lPARA_TYPE,);
+                        paraType: paraDataList[index].lPARA_TYPE,
+                      timeStamp: paraDataList[index].lPARA_TIMESTAMP,);
                     },
                   );
                 } else {
                   return Container(child:
                   //const CircularProgressIndicator(),);
-                      new Image.asset("assets/pngs/emptyCat.png"),);
+                      new Image.asset("assets/pngs/emptyCat.png",width: double.infinity,height: double.infinity,),);
                 }
               },
               stream: fireStore

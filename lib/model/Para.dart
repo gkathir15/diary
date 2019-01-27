@@ -20,7 +20,7 @@ class Paras {
   static List<Paras> getParaList(List<DocumentSnapshot> snapshot)
   {
    List<Paras> paraList = new List();
-   for (int i = 0; i < snapshot.length; i++) {
+   for (int i = 0; i <= snapshot.length-1; i++) {
      paraList.add(new Paras(
          snapshot[i][PARA_TYPE],
          snapshot[i][PARA_DATA],
@@ -31,7 +31,7 @@ class Paras {
          ));
    }
    print('Paras.getParaList   '+paraList.length.toString());
-   return paraList;
+   return paraList.reversed.toList(growable: true);
   }
 
 

@@ -152,7 +152,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 //    ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: new FloatingActionButton(
+            floatingActionButton:
+            new FloatingActionButton(
                 shape: CircleBorder(
                     side: BorderSide.lerp(BorderSide(color: Colors.black),
                         BorderSide(color: Colors.black), 2.0)),
@@ -164,8 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 ),
                 elevation: 2.0,
                 onPressed: () {
-                  // ShowDialogIFCardNotPresent(context);
-                  createOrNavigateToPage(todayDateAsDDMMYY(), fContext);
+                 createOrNavigateToPage(todayDateAsDDMMYY(), fContext);
                 }),
             body: Container(
               decoration: new BoxDecoration(
@@ -218,6 +218,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void _selectedFab(int index) {
     setState(() {
       _lastSelected = 'FAB: $index';
+      print('_MyHomePageState._selectedFab$index');
     });
   }
 
@@ -258,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       });
       Map responseMap = json.decode(response.body);
       data = SplashData.fromJson(responseMap).data;
-      for (int i = 0; i <= data.length; i++) {
+      for (int i = 0; i < data.length; i++) {
         sharedPreferences.setString(SPLASH_Pic + i.toString(), data[i]);
       }
       sharedPreferences.setInt(SPLASH_DATA_SIZE, data.length);
@@ -338,7 +339,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 //     }
   }
 
-  Widget _buildFab() {
+  Widget buildFab() {
     final icons = [Icons.sms, Icons.mail, Icons.phone];
     return AnchoredOverlay(
       showOverlay: true,
@@ -346,6 +347,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         return CenterAbout(
           position: Offset(offset.dx, offset.dy - icons.length * 35.0),
           child: FabWithIcons(
+            iconColor: Colors.black,
+            fabBg: Colors.white,
             icons: icons,
             onIconTapped: _selectedFab,
           ),

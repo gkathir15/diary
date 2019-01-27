@@ -15,10 +15,10 @@ class ImageUtils
     return await (await uploadTask.onComplete).ref.getDownloadURL();
   }
   
-  showUploadDialog(Paras para)
+  showUploadDialog(Paras para,BuildContext context)
   {
     ImageSource imageSource;
-    SimpleDialog(title: Text("Upload Image",style: TextStyle(color: Colors.amberAccent
+  var dialog =   SimpleDialog(title: Text("Upload Image",style: TextStyle(color: Colors.amberAccent
     ),),titlePadding: EdgeInsets.all(2.0),children: <Widget>[
       new Row(
         children: <Widget>[
@@ -34,6 +34,6 @@ class ImageUtils
       )
     ],);
 
-
+      showDialog(context: context,barrierDismissible: true,builder: (context)=>dialog);
   }
 }
