@@ -1,20 +1,37 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diary/constants/AppConstants.dart';
 import 'package:diary/model/Para.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:diary/main.dart';
 class ImageUtils
 {
-  static uploadImage(String imageId,ImageSource src) async {
+  static uploadImage(String pageDate,ImageSource src) async {
     File imageFile = await ImagePicker.pickImage(source: src);
     StorageReference ref =
-    FirebaseStorage.instance.ref().child(TYPE_IMAGE).child(imageId);
+    FirebaseStorage.instance.ref().child(TYPE_IMAGE).child(Timestamp.now().toDate().toString());
     StorageUploadTask uploadTask = ref.putFile(imageFile);
-    return await (await uploadTask.onComplete).ref.getDownloadURL();
+
+     await (await uploadTask.onComplete).ref.getDownloadURL().then((value){
+       print('got url');
+       fireStore
+           .collection('DIARY_DATA')
+           .document(pageDate).collection(PARA_DATA).add({
+         PARA_TYPE: TYPE_IMAGE,
+         PARA_DATA: value,
+         PARA_FONT: 'Handlee',
+         PARA_TIMESTAMP: Timestamp.now(),
+         PARA_WRITER: fireBaseUser.email,
+         PARA_CREATOR_URL: fireBaseUser.photoUrl
+       });
+     });
   }
-  
+
+
+
   showUploadDialog(Paras para,BuildContext context)
   {
     ImageSource imageSource;

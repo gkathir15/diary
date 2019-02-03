@@ -7,10 +7,12 @@ import 'package:diary/constants/AppConstants.dart';
 import 'package:diary/UI/transCards/cardFlipper.dart';
 import 'package:diary/UI/transCards/DateCard.dart';
 import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
+import 'package:image_picker/image_picker.dart';
 import 'LeafWidgets.dart';
 import 'package:diary/model/Para.dart';
 import 'package:shimmer/shimmer.dart';
 import 'MQueries.dart';
+import 'package:diary/util/ImageUtils.dart';
 class LeafPage extends StatefulWidget {
   final String pageDate;
 
@@ -40,7 +42,7 @@ class LeafState extends State<LeafPage> {
 //        return returnEditText(submitData(), textEditingController);
 //      }),
       floatingActionButton: fAB(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(widget.pageDate,style: TextStyle(color: Colors.white),),
@@ -58,7 +60,7 @@ class LeafState extends State<LeafPage> {
             StreamBuilder(
               builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
                 if (snapshot.hasData||paraDataList.length!=0) {
-                  paraDataList.addAll(Paras.getParaList(snapshot.data.documents));
+                  paraDataList=Paras.getParaList(snapshot.data.documents);
                   return ListView.builder(
                     shrinkWrap: true,
                     controller: scrollController,
@@ -237,7 +239,7 @@ class LeafState extends State<LeafPage> {
       //focusNode.addListener(_listener);
       showModalBottomSheet(context: context, builder: (BuildContext cxt) {
         return Container(
-          color: Colors.black38,
+          color: Colors.black,
           child: returnEditText(submitData(), textEditingController, context),);
       });
     }else{
@@ -245,29 +247,26 @@ class LeafState extends State<LeafPage> {
         return Container(
           height: MQueries.getSize(context).height/10,
           width: double.infinity,
-          transform: Matrix4.rotationX(2.0),
           color: Colors.white,
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                bottomIcon(1,(){
-                  //open IamgrChooser
-                }),bottomIcon(2, (){
-                  //show Camra
-                }),
-                bottomIcon(3, (){
-                 // Navigator.of(context).pop();
-                  showBottomSheetEditText(context, true);}),
-                bottomIcon(4, (){
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              bottomIcon(1,(){
+                ImageUtils.uploadImage(widget.pageDate, ImageSource.gallery);
+              }),bottomIcon(2, (){
+                //show Camra
+                ImageUtils.uploadImage(widget.pageDate, ImageSource.camera);
+              }),
+              bottomIcon(3, (){
+               // Navigator.of(context).pop();
+                showBottomSheetEditText(context, true);}),
+              bottomIcon(4, (){
 
-                }),
-                bottomIcon(5,(){}),
-              ],
-            ),
+              }),
+              bottomIcon(5,(){}),
+            ],
           ),
         );
       });

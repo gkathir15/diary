@@ -59,10 +59,10 @@ class LeafData extends StatelessWidget {
               softWrap: true,
               textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 4.0,
+                fontSize: 40.0,
                   inherit: true,
                   color: Colors.white,
-                  fontFamily: 'Handlee'),
+                  ),
             ),
             new Row(
               children: <Widget>[
@@ -137,7 +137,7 @@ Widget returnEditText(Function onSubmit,TextEditingController txtEditController,
           autocorrect: true,keyboardAppearance: Brightness.dark,
           maxLengthEnforced: false,enableInteractiveSelection: true,enabled: true,
          // focusNode: focusNode,
-          maxLines: 3,decoration: const InputDecoration(),style: TextStyle(fontFamily:'bloom',inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
+          maxLines: 3,decoration: const InputDecoration(),style: TextStyle(inherit: true,fontSize: MediaQuery.of(context).devicePixelRatio*10),
         )
     );
 //    TextField(controller:txtEditController,textCapitalization: TextCapitalization.sentences,
