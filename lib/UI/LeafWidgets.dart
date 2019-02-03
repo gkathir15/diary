@@ -31,7 +31,7 @@ class LeafData extends StatelessWidget {
     lContext = context;
     switch (paraType) {
       case TYPE_TEXT:
-       return  returnText();
+       return  returnText(context);
         break;
       case TYPE_IMAGE:
         return returnImage();
@@ -45,22 +45,21 @@ class LeafData extends StatelessWidget {
       case TYPE_LINK:
         return returnLink();
         break;
+
     }
   }
 
-  Widget returnText() {
+  Widget returnText(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 2.0,top: 3.0,right: 2.0,bottom: 6.0),
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
-        child: Column(
+      child:  Column(
           children: <Widget>[
             new Text(
               data,
               softWrap: true,
               textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 4.0,
                   inherit: true,
                   color: Colors.white,
                   fontFamily: 'Handlee'),
@@ -75,13 +74,13 @@ class LeafData extends StatelessWidget {
 
                 ),
                 new Text(AppConstants.defaultIfNull(
-                    writerName, fireBaseUser.displayName),style: TextStyle(color: Colors.white,fontSize: MQueries.getPixelRatio(lContext)),),
-                new Text(timeAgo.format(timeStamp.toDate()),style: TextStyle(color: Colors.white,fontSize: MQueries.getPixelRatio(lContext)),),
+                    writerName, fireBaseUser.displayName),style: TextStyle(fontFamily: 'Handlee',color: Colors.white,fontSize: 0.3),),
+                new Text(timeAgo.format(timeStamp.toDate()),style: TextStyle(fontFamily: 'Handlee',color: Colors.white,fontSize: 0.3),),
               ],
             )
           ],
         ),
-      ),
+
     );
   }
 

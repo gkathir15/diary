@@ -10,6 +10,7 @@ import 'package:diary/UI/transCards/AnimCardBottomBar.dart';
 import 'LeafWidgets.dart';
 import 'package:diary/model/Para.dart';
 import 'package:shimmer/shimmer.dart';
+import 'MQueries.dart';
 class LeafPage extends StatefulWidget {
   final String pageDate;
 
@@ -140,7 +141,7 @@ class LeafState extends State<LeafPage> {
   onFabTap() {
     print("fab tap");
 
-    showBottomSheetEditText(context);
+    showBottomSheetEditText(context,false);
 
 
   }
@@ -209,16 +210,68 @@ class LeafState extends State<LeafPage> {
 
   }
 
-
-  showBottomSheetEditText(BuildContext context)
+  Widget bottomIcon(int c,Function func)
   {
-    textEditingController = TextEditingController();
-    //focusNode.addListener(_listener);
-    showModalBottomSheet(context: context,builder: (BuildContext cxt){
-      return Container(
-        color: Colors.black38,
-        child:returnEditText(submitData(), textEditingController,context),);
-    });
+    switch(c)
+        {
+      case 1:
+        return InkWell(child: Icon(Icons.photo),onTap: func,);
+      case 2:
+        return InkWell(child: Icon(Icons.camera_enhance),onTap: func,);
+      case 3:
+        return InkWell(child: Icon(Icons.textsms),onTap: func,);
+      case 4:
+        return InkWell(child: Icon(Icons.video_library),onTap: func,);
+      case 5:
+        return InkWell(child: Icon(Icons.audiotrack),onTap: func,);
+
+        }
+
+  }
+
+
+  showBottomSheetEditText(BuildContext context,bool isEditText)
+  {
+    if(isEditText) {
+      textEditingController = TextEditingController();
+      //focusNode.addListener(_listener);
+      showModalBottomSheet(context: context, builder: (BuildContext cxt) {
+        return Container(
+          color: Colors.black38,
+          child: returnEditText(submitData(), textEditingController, context),);
+      });
+    }else{
+      showModalBottomSheet(context: context, builder: (BuildContext cxt){
+        return Container(
+          height: MQueries.getSize(context).height/10,
+          width: double.infinity,
+          transform: Matrix4.rotationX(2.0),
+          color: Colors.white,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                bottomIcon(1,(){
+                  //open IamgrChooser
+                }),bottomIcon(2, (){
+                  //show Camra
+                }),
+                bottomIcon(3, (){
+                 // Navigator.of(context).pop();
+                  showBottomSheetEditText(context, true);}),
+                bottomIcon(4, (){
+
+                }),
+                bottomIcon(5,(){}),
+              ],
+            ),
+          ),
+        );
+      });
+    }
 
   }
 

@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 class ImageUtils
 {
-  uploadImage(String imageId,ImageSource src) async {
+  static uploadImage(String imageId,ImageSource src) async {
     File imageFile = await ImagePicker.pickImage(source: src);
     StorageReference ref =
     FirebaseStorage.instance.ref().child(TYPE_IMAGE).child(imageId);
