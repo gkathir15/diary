@@ -70,7 +70,7 @@ class LeafData extends StatelessWidget {
                   child: new CachedNetworkImage(
                       imageUrl: AppConstants.defaultIfNull(
                           writerImgUrl, fireBaseUser.photoUrl)),
-                  radius: 0.1,
+                  radius: 0.5,
 
                 ),
                 new Text(AppConstants.defaultIfNull(

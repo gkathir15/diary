@@ -256,16 +256,17 @@ class LeafState extends State<LeafPage> {
               bottomIcon(1,(){
                 ImageUtils.uploadImage(widget.pageDate, ImageSource.gallery);
               }),bottomIcon(2, (){
-                //show Camra
                 ImageUtils.uploadImage(widget.pageDate, ImageSource.camera);
               }),
               bottomIcon(3, (){
                // Navigator.of(context).pop();
                 showBottomSheetEditText(context, true);}),
               bottomIcon(4, (){
-
+                  //video
               }),
-              bottomIcon(5,(){}),
+              bottomIcon(5,(){
+                //audio
+              }),
             ],
           ),
         );

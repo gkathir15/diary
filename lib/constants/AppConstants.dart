@@ -5,6 +5,9 @@ final String SPLASH_DATA_SIZE = "SplashDataSize";
 final String SPLASH_Pic = "Splash_no_";
 final String PROFILE_HERO_KEY = "GprofilePicHeroKey";
 
+
+const String appTitle ="Moments";
+
 //FireStore Keys
 
 final String Collection_DIARY_DATA = "DIARY_DATA";
@@ -39,6 +42,11 @@ final String PARA_ID = 'PARA_ID';
 final String PARA_FONT = 'PARA_FONT';
 final String PARA_CREATOR_URL ="CREATOR_URL";
 
+
+//Shared Prefs
+
+final String IS_SIGNED_IN = 'IS_SIGNED_IN';
+
 // Date Constants
 
 class AppConstants {
@@ -69,5 +77,15 @@ class AppConstants {
   }
 
   //Colors
+
+
+//Routes
+
+final String ROUTE_SIGIN='SIGNIN';
+  final String ROUTE_GOOGLE = "GOOGLE_LOGIN";
+  final String ROUTE_PROFILE="PROFILE";
+  final String ROUTE_LEAFPAGE="LEAF_PAGE";
+  final String UNKNOWN ="UNKNOWN";
+
 
 }

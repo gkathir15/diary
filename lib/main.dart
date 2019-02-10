@@ -25,12 +25,16 @@ import 'package:connectivity/connectivity.dart';
 import 'UI/dialogs/NewPageDialog.dart';
 import 'dart:ui';
 import 'UI/transCards/card_data.dart';
+import 'util/AppUtilMethods.dart';
+import 'constants/AppConstants.dart';
+import 'UI/SignInPage.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser fireBaseUser;
 Firestore fireStore;
 SharedPreferences sharedPreferences;
+
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -44,9 +48,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(routes: {
+      '/':(context)=>MyHomePage(),
+      'GOOGLE_LOGIN':(context)=>SignInPage(),
+
+    },
+      initialRoute: '/',
       checkerboardOffscreenLayers: true,
-      title: 'Diary',
+      title: appTitle,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         splashColor: Colors.white,
@@ -72,57 +81,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     fContext = context;
-    return fireBaseUser == null
-        ? Scaffold(
-            resizeToAvoidBottomPadding: false,
-            backgroundColor: Colors.black,
-            body: Container(
-              decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                image: new AssetImage("assets/jpgs/signIn.jpg"),
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              )),
-              child: new Center(
-                  child: new Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  new Text("Diary",
-                      style: const TextStyle(
-                        fontFamily: "Handlee",
-                        color: Colors.white,
-                        fontSize: 100.0,
-                      )),
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      new Text(
-                        "Sign in with",
-                        style: new TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontFamily: "bloom"),
-                      ),
-                      new InkWell(
-                        splashColor: Colors.white24,
-                        child: new Image.asset(
-                          "assets/pngs/google.png",
-                          height: MediaQuery.of(context).size.width / 5,
-                          width: MediaQuery.of(context).size.width / 5,
-                        ),
-                        onTap: () {
-                          _handleSignIn();
-                        },
-                      )
-                    ],
-                  )
-                ],
-              )),
-            )
-
-            // This trailing comma makes auto-formatting nicer for build methods.
-            )
-        : Scaffold(
+    return isFingerPrintAuthDone()?
+         Scaffold(
             backgroundColor: Colors.black,
             bottomNavigationBar: FABBottomAppBar(
               backgroundColor: Colors.amber,
@@ -191,7 +151,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     );
                   }),
             ),
-          );
+          ):
+        Scaffold(body: Center(child: Stack(children: <Widget>[
+          Image.asset("assets/jpgs/unauth.jpg")
+        ],
+        ),),);
   }
 
   Function  OnTap = (String _DateString)
@@ -222,17 +186,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     });
   }
 
-  _handleSignIn() async {
-    GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    FirebaseUser user = await auth.signInWithGoogle(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    print("signed in " + user.displayName);
-    fireBaseUser = user;
-    setState(() {});
-  }
+
 
   _handleSilentSignIn() async {
     GoogleSignInAccount googleSignInAccount =
@@ -369,7 +323,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     if(fireBaseUser==null)
     _handleSilentSignIn();
-
     getSplashBgDate();
     super.initState();
   }

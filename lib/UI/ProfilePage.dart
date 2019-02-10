@@ -10,26 +10,24 @@ class ProfilePage extends StatelessWidget
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(centerTitle: true,title: Text("Profile"),elevation:5.0 ),
-      body: FittedBox(
-        fit: BoxFit.contain,
-        child: Center(
-          child: Container(
-              child:Center(child: Column(
-                children: <Widget>[
-                  Text("Welcome"),
-                  Text(fireBaseUser.displayName),
-                  InkWell(child: Icon(Icons.exit_to_app),onTap: (){
-                    fireBaseUser.delete();
-                    auth.signOut().whenComplete((){
-                      exit(0);
-                    });
-                  },)
+      body:  Container(
+                child:Center(child:Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text("Welcome",style: TextStyle(fontSize: 20.0),),
+                    Text(fireBaseUser.displayName,style: TextStyle(fontSize: 20.0),),
+                    InkWell(child: Icon(Icons.exit_to_app,size: 20.0,),onTap: (){
+                      fireBaseUser.delete();
+                      auth.signOut().whenComplete((){
+                        exit(0);
+                      });
+                    },)
 
-                ],
-              ),)
-          ),
-        ),
-      ),
+                  ],
+                ),)
+            ),
+
     );
   }
 
